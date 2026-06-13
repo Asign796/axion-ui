@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Activity, Lock } from 'lucide-react';
+import { Lock } from 'lucide-react';
 
 interface LoginProps {
   onLogin: () => void;
