@@ -10,7 +10,8 @@ import { AlertsPanel } from './components/AlertsPanel';
 import { Sidebar } from './components/Sidebar';
 import { Login } from './components/Login';
 
-// Import new page stubs
+// Import pages
+import { FleetSummary } from './components/pages/FleetSummary';
 import { AssetHierarchy } from './components/pages/AssetHierarchy';
 import { AlarmsEvents } from './components/pages/AlarmsEvents';
 import { HistoricalTrends } from './components/pages/HistoricalTrends';
@@ -23,7 +24,8 @@ function App() {
     return localStorage.getItem('axion_auth') === 'true';
   });
   
-  const [currentView, setCurrentView] = useState('dashboard');
+  const [currentView, setCurrentView] = useState('fleet');
+  const [refreshInterval, setRefreshInterval] = useState<number | null>(5000);
 
   const [summary, setSummary] = useState({ onlineAssets: 0, lastUpdate: '-' });
   const [devices, setDevices] = useState<any[]>([]);
@@ -95,19 +97,25 @@ function App() {
     }
   };
 
+  // Main Dashboard Data Loop
   useEffect(() => {
     fetchDashboardData();
-    const interval = setInterval(fetchDashboardData, 5000);
-    return () => clearInterval(interval);
-  }, [isLoggedIn]);
+    if (refreshInterval !== null) {
+      const intervalId = setInterval(fetchDashboardData, refreshInterval);
+      return () => clearInterval(intervalId);
+    }
+  }, [isLoggedIn, refreshInterval]);
 
+  // Selected Device Loop
   useEffect(() => {
     if (selectedDeviceId && isLoggedIn) {
       fetchSelectedDeviceData(selectedDeviceId);
-      const interval = setInterval(() => fetchSelectedDeviceData(selectedDeviceId), 5000);
-      return () => clearInterval(interval);
+      if (refreshInterval !== null) {
+        const intervalId = setInterval(() => fetchSelectedDeviceData(selectedDeviceId), refreshInterval);
+        return () => clearInterval(intervalId);
+      }
     }
-  }, [selectedDeviceId, timeRange, isLoggedIn]);
+  }, [selectedDeviceId, timeRange, isLoggedIn, refreshInterval]);
 
   if (!isLoggedIn) {
     return <Login onLogin={handleLogin} />;
@@ -115,6 +123,16 @@ function App() {
 
   const renderCurrentView = () => {
     switch (currentView) {
+      case 'fleet':
+        return (
+          <FleetSummary 
+            regionSummary={regionSummary} 
+            onSelectRegion={(region) => {
+              // For now just route to dashboard, in future could filter devices
+              setCurrentView('dashboard');
+            }} 
+          />
+        );
       case 'dashboard':
         return (
           <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6 custom-scrollbar">
@@ -173,7 +191,12 @@ function App() {
       case 'trends':
         return <HistoricalTrends />;
       case 'settings':
-        return <SystemSettings />;
+        return (
+          <SystemSettings 
+            refreshInterval={refreshInterval} 
+            onRefreshIntervalChange={setRefreshInterval} 
+          />
+        );
       default:
         return <div className="p-6 text-white">View not found</div>;
     }

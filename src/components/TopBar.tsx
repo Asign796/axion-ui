@@ -14,8 +14,8 @@ export function TopBar({ onlineAssets, lastUpdate, onLogout }: TopBarProps) {
     <header className="bg-[#171717] border-b border-[#262626] px-6 py-3 mb-6 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-10">
       <div className="flex items-center gap-4">
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight uppercase">Plant Overview</h1>
-          <p className="text-xs text-slate-400 font-medium">System 1 Dashboard</p>
+          <h1 className="text-xl font-bold text-white tracking-tight uppercase">AXION INTELLIGENCE PLATFORM</h1>
+          <p className="text-xs text-slate-400 font-medium">Agentic AI Predictive Insights</p>
         </div>
       </div>
       

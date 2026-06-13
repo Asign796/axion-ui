@@ -7,7 +7,8 @@ interface SidebarProps {
 
 export function Sidebar({ currentView, onViewChange }: SidebarProps) {
   const menuItems = [
-    { id: 'dashboard', icon: LayoutDashboard, label: 'Dashboard' },
+    { id: 'fleet', icon: LayoutDashboard, label: 'Fleet Summary' },
+    { id: 'dashboard', icon: Server, label: 'Device Diagnostics' },
     { id: 'hierarchy', icon: Server, label: 'Asset Hierarchy' },
     { id: 'alarms', icon: AlertTriangle, label: 'Alarms & Events' },
     { id: 'trends', icon: LineChart, label: 'Historical Trends' },

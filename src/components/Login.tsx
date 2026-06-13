@@ -24,7 +24,7 @@ export function Login({ onLogin }: LoginProps) {
       <div className="w-full max-w-md">
         <div className="text-center mb-10 flex flex-col items-center">
           <img src="/logo.png" alt="AXION Systems" className="h-16 object-contain mb-4" />
-          <p className="text-slate-400 font-medium tracking-widest uppercase text-xs">System 1 Asset Management</p>
+          <p className="text-slate-400 font-medium tracking-widest uppercase text-xs">Agentic AI Condition Monitoring</p>
         </div>
 
         <div className="bg-[#171717] border border-[#404040] rounded-lg p-8 shadow-2xl">
