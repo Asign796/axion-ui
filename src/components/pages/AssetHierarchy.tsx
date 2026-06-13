@@ -49,7 +49,8 @@ export function AssetHierarchy({ devices, onSelectDevice }: AssetHierarchyProps)
         </div>
         
         <div className="pl-6 border-l border-[#404040] ml-3 space-y-4">
-          {Object.entries(grouped).map(([region, regionDevices]) => {
+          {Object.entries(grouped).map(([region, regionDevs]) => {
+            const regionDevices = regionDevs as any[];
             const isExpanded = expandedRegions[region] !== false; // default expanded
             
             return (
@@ -65,7 +66,7 @@ export function AssetHierarchy({ devices, onSelectDevice }: AssetHierarchyProps)
                 
                 {isExpanded && (
                   <div className="pl-6 border-l border-[#404040] ml-2 space-y-2">
-                    {regionDevices.map((device) => (
+                    {regionDevices.map((device: any) => (
                       <div 
                         key={device.device_id}
                         onClick={() => onSelectDevice(device.device_id)}
