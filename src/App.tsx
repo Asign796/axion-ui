@@ -10,12 +10,20 @@ import { AlertsPanel } from './components/AlertsPanel';
 import { Sidebar } from './components/Sidebar';
 import { Login } from './components/Login';
 
+// Import new page stubs
+import { AssetHierarchy } from './components/pages/AssetHierarchy';
+import { AlarmsEvents } from './components/pages/AlarmsEvents';
+import { HistoricalTrends } from './components/pages/HistoricalTrends';
+import { SystemSettings } from './components/pages/SystemSettings';
+
 const API_BASE = 'https://api.axionsystems.de';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('axion_auth') === 'true';
   });
+  
+  const [currentView, setCurrentView] = useState('dashboard');
 
   const [summary, setSummary] = useState({ onlineAssets: 0, lastUpdate: '-' });
   const [devices, setDevices] = useState<any[]>([]);
@@ -105,53 +113,72 @@ function App() {
     return <Login onLogin={handleLogin} />;
   }
 
-  return (
-    <div className="min-h-screen bg-[#09090b] text-slate-300 font-sans flex">
-      <Sidebar />
-      
-      <div className="flex-1 lg:ml-64 ml-16 min-w-0 flex flex-col h-screen overflow-hidden">
-        <TopBar onlineAssets={summary.onlineAssets} lastUpdate={summary.lastUpdate} onLogout={handleLogout} />
-        
-        <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6 custom-scrollbar">
-          <div className="max-w-[1600px] mx-auto">
-            <div className="grid grid-cols-1 xl:grid-cols-[300px_1fr_300px] gap-4">
-              {/* Left Sidebar */}
-              <div className="flex flex-col gap-4">
-                <AssetList 
-                  devices={devices} 
-                  selectedDeviceId={selectedDeviceId}
-                  onSelectDevice={setSelectedDeviceId}
-                />
-                <Regions regionSummary={regionSummary} devices={devices} />
-              </div>
-
-              {/* Main Content */}
-              <div className="flex flex-col gap-4">
-                <KPIStrip device={latestData} />
-                
-                <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-4">
-                  <LiveTrend 
-                    data={trendData} 
-                    timeRange={timeRange} 
-                    onTimeRangeChange={setTimeRange} 
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case 'dashboard':
+        return (
+          <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6 custom-scrollbar">
+            <div className="max-w-[1600px] mx-auto">
+              <div className="grid grid-cols-1 xl:grid-cols-[300px_1fr_300px] gap-4">
+                {/* Left Sidebar */}
+                <div className="flex flex-col gap-4">
+                  <AssetList 
+                    devices={devices} 
+                    selectedDeviceId={selectedDeviceId}
+                    onSelectDevice={setSelectedDeviceId}
                   />
-                  <Throughput data={throughput} />
+                  <Regions regionSummary={regionSummary} devices={devices} />
                 </div>
 
-                <div className="h-[300px]">
-                  <TopProblemAssets devices={topAnomalous} onSelectDevice={setSelectedDeviceId} />
-                </div>
-              </div>
+                {/* Main Content */}
+                <div className="flex flex-col gap-4">
+                  <KPIStrip device={latestData} />
+                  
+                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-4">
+                    <LiveTrend 
+                      data={trendData} 
+                      timeRange={timeRange} 
+                      onTimeRangeChange={setTimeRange} 
+                    />
+                    <Throughput data={throughput} />
+                  </div>
 
-              {/* Right Sidebar */}
-              <div className="flex flex-col gap-4">
-                <div className="h-[600px]">
-                  <AlertsPanel />
+                  <div className="h-[300px]">
+                    <TopProblemAssets devices={topAnomalous} onSelectDevice={setSelectedDeviceId} />
+                  </div>
+                </div>
+
+                {/* Right Sidebar */}
+                <div className="flex flex-col gap-4">
+                  <div className="h-[600px]">
+                    <AlertsPanel />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
+        );
+      case 'hierarchy':
+        return <AssetHierarchy />;
+      case 'alarms':
+        return <AlarmsEvents />;
+      case 'trends':
+        return <HistoricalTrends />;
+      case 'settings':
+        return <SystemSettings />;
+      default:
+        return <div className="p-6 text-white">View not found</div>;
+    }
+  };
+
+  return (
+    <div className="min-h-screen bg-[#09090b] text-slate-300 font-sans flex">
+      <Sidebar currentView={currentView} onViewChange={setCurrentView} />
+      
+      <div className="flex-1 lg:ml-64 ml-16 min-w-0 flex flex-col h-screen overflow-hidden">
+        <TopBar onlineAssets={summary.onlineAssets} lastUpdate={summary.lastUpdate} onLogout={handleLogout} />
+        
+        {renderCurrentView()}
       </div>
     </div>
   );
