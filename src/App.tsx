@@ -6,7 +6,7 @@ import { AssetList } from './components/AssetList';
 import { Throughput } from './components/Throughput';
 import { Regions } from './components/Regions';
 
-const API_BASE = 'http://localhost:8000';
+const API_BASE = 'http://api.axionsystems.de';
 
 function App() {
   const [summary, setSummary] = useState({ onlineAssets: 0, lastUpdate: '-' });
