@@ -99,7 +99,7 @@ export function KPIStrip({ device }: KPIStripProps) {
         <div className="flex flex-col">
           <span className="text-[10px] uppercase tracking-wider text-slate-500">First Seen</span>
           <span className="text-xs font-medium text-slate-300">
-            {device.first_seen ? new Date(device.first_seen).toLocaleDateString() : 'N/A'}
+            {device.first_seen ? new Date(device.first_seen.endsWith('Z') ? device.first_seen : `${device.first_seen}Z`).toLocaleDateString() : 'N/A'}
           </span>
         </div>
         <div className="flex flex-col">

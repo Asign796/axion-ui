@@ -11,7 +11,8 @@ export function LiveTrend({ data, timeRange, onTimeRangeChange }: LiveTrendProps
   const [metric, setMetric] = useState<'temperature' | 'vibration' | 'current'>('temperature');
 
   const formatTime = (timeStr: any) => {
-    const date = new Date(timeStr);
+    const str = typeof timeStr === 'string' && !timeStr.endsWith('Z') ? `${timeStr}Z` : timeStr;
+    const date = new Date(str);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 

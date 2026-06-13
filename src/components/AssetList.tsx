@@ -73,7 +73,8 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
       <div className="space-y-2 flex-1 overflow-y-auto px-2 custom-scrollbar">
         {filteredDevices.map((device) => {
           const isSelected = device.device_id === selectedDeviceId;
-          const lastSeenDate = new Date(device.last_seen);
+          const lastSeenStr = device.last_seen.endsWith('Z') ? device.last_seen : `${device.last_seen}Z`;
+          const lastSeenDate = new Date(lastSeenStr);
           const timeDiffSeconds = (new Date().getTime() - lastSeenDate.getTime()) / 1000;
           const isOnline = timeDiffSeconds < 120;
           

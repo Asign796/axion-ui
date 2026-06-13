@@ -43,7 +43,7 @@ function App() {
 
       setSummary({
         onlineAssets: sumData.onlineAssets,
-        lastUpdate: new Date(sumData.lastUpdate).toLocaleTimeString()
+        lastUpdate: sumData.lastUpdate ? new Date(sumData.lastUpdate.endsWith('Z') ? sumData.lastUpdate : `${sumData.lastUpdate}Z`).toLocaleTimeString() : '-'
       });
       setDevices(devData);
       setThroughput(thruData);
