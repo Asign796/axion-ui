@@ -159,7 +159,15 @@ function App() {
           </div>
         );
       case 'hierarchy':
-        return <AssetHierarchy />;
+        return (
+          <AssetHierarchy 
+            devices={devices} 
+            onSelectDevice={(id) => {
+              setSelectedDeviceId(id);
+              setCurrentView('dashboard');
+            }} 
+          />
+        );
       case 'alarms':
         return <AlarmsEvents />;
       case 'trends':
