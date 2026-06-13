@@ -12,12 +12,8 @@ export function Sidebar() {
   return (
     <div className="w-16 lg:w-64 bg-[#0a0a0a] border-r border-[#262626] flex flex-col h-screen fixed left-0 top-0">
       <div className="h-20 flex items-center justify-center lg:justify-start lg:px-6 border-b border-[#262626]">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center">
-            <span className="text-white font-bold text-xl">A</span>
-          </div>
-          <span className="text-white font-bold text-xl hidden lg:block tracking-widest">AXION</span>
-        </div>
+        <img src="/logo.png" alt="AXION Systems" className="h-10 object-contain hidden lg:block" />
+        <img src="/logo.png" alt="AXION Systems" className="h-8 object-contain lg:hidden" style={{ objectPosition: 'left', width: '32px', overflow: 'hidden' }} />
       </div>
 
       <div className="flex-1 py-6 flex flex-col gap-2">

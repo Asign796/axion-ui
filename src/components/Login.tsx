@@ -22,12 +22,9 @@ export function Login({ onLogin }: LoginProps) {
   return (
     <div className="min-h-screen bg-black flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-sm bg-blue-600/10 border border-blue-500/20 mb-6">
-            <Activity className="w-8 h-8 text-blue-500" />
-          </div>
-          <h1 className="text-3xl font-bold text-white tracking-tight mb-2">AXION</h1>
-          <p className="text-slate-400 font-medium">System 1 Asset Management</p>
+        <div className="text-center mb-10 flex flex-col items-center">
+          <img src="/logo.png" alt="AXION Systems" className="h-16 object-contain mb-4" />
+          <p className="text-slate-400 font-medium tracking-widest uppercase text-xs">System 1 Asset Management</p>
         </div>
 
         <div className="bg-[#171717] border border-[#404040] rounded-lg p-8 shadow-2xl">
