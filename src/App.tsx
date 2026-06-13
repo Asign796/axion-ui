@@ -5,6 +5,8 @@ import { LiveTrend } from './components/LiveTrend';
 import { AssetList } from './components/AssetList';
 import { Throughput } from './components/Throughput';
 import { Regions } from './components/Regions';
+import { TopProblemAssets } from './components/TopProblemAssets';
+import { AlertsPanel } from './components/AlertsPanel';
 
 const API_BASE = 'https://api.axionsystems.de';
 
@@ -16,99 +18,111 @@ function App() {
   const [trendData, setTrendData] = useState<any[]>([]);
   const [timeRange, setTimeRange] = useState<number>(1);
   const [throughput, setThroughput] = useState<any[]>([]);
+  
+  // New State variables
+  const [topAnomalous, setTopAnomalous] = useState<any[]>([]);
+  const [regionSummary, setRegionSummary] = useState<any[]>([]);
 
   const fetchDashboardData = async () => {
     try {
-      const [sumRes, devRes, thruRes] = await Promise.all([
+      const [sumRes, devRes, thruRes, anomRes, regRes] = await Promise.all([
         fetch(`${API_BASE}/dashboard/summary`),
         fetch(`${API_BASE}/devices`),
-        fetch(`${API_BASE}/dashboard/throughput`)
+        fetch(`${API_BASE}/dashboard/throughput`),
+        fetch(`${API_BASE}/devices/top-anomalous`),
+        fetch(`${API_BASE}/dashboard/regions`)
       ]);
       
-      if (sumRes.ok) {
-        const sumData = await sumRes.json();
-        const date = new Date(sumData.lastUpdate);
-        setSummary({
-          onlineAssets: sumData.onlineAssets,
-          lastUpdate: sumData.lastUpdate ? date.toLocaleTimeString([], { hour12: false }) + ' UTC' : '-'
-        });
-      }
-      
-      if (devRes.ok) {
-        const devData = await devRes.json();
-        setDevices(devData);
-        if (!selectedDeviceId && devData.length > 0) {
-          setSelectedDeviceId(devData[0].device_id);
-        }
-      }
+      const [sumData, devData, thruData, anomData, regData] = await Promise.all([
+        sumRes.json(),
+        devRes.json(),
+        thruRes.json(),
+        anomRes.json(),
+        regRes.json()
+      ]);
 
-      if (thruRes.ok) {
-        setThroughput(await thruRes.json());
+      setSummary({
+        onlineAssets: sumData.onlineAssets,
+        lastUpdate: new Date(sumData.lastUpdate).toLocaleTimeString()
+      });
+      setDevices(devData);
+      setThroughput(thruData);
+      setTopAnomalous(anomData);
+      setRegionSummary(regData);
+
+      if (!selectedDeviceId && devData.length > 0) {
+        setSelectedDeviceId(devData[0].device_id);
       }
-    } catch (e) {
-      console.error('Failed to fetch dashboard data', e);
+    } catch (err) {
+      console.error('Failed to fetch dashboard data', err);
     }
   };
 
-  const fetchDeviceData = async (deviceId: string, hours: number) => {
+  const fetchSelectedDeviceData = async (deviceId: string) => {
     try {
       const [latestRes, trendRes] = await Promise.all([
-        fetch(`${API_BASE}/devices/latest?deviceId=${deviceId}`),
-        fetch(`${API_BASE}/devices/${deviceId}/trends?hours=${hours}`)
+        fetch(`${API_BASE}/devices/${deviceId}/latest`),
+        fetch(`${API_BASE}/devices/${deviceId}/trends?hours=${timeRange}`)
       ]);
-
-      if (latestRes.ok) setLatestData(await latestRes.json());
-      if (trendRes.ok) setTrendData(await trendRes.json());
-    } catch (e) {
-      console.error('Failed to fetch device data', e);
+      setLatestData(await latestRes.json());
+      setTrendData(await trendRes.json());
+    } catch (err) {
+      console.error(`Failed to fetch data for ${deviceId}`, err);
     }
   };
 
-  // Initial fetch and polling
   useEffect(() => {
     fetchDashboardData();
     const interval = setInterval(fetchDashboardData, 5000);
     return () => clearInterval(interval);
   }, []);
 
-  // Fetch device specific data when selection or timeRange changes
   useEffect(() => {
     if (selectedDeviceId) {
-      fetchDeviceData(selectedDeviceId, timeRange);
-      const interval = setInterval(() => fetchDeviceData(selectedDeviceId, timeRange), 5000);
+      fetchSelectedDeviceData(selectedDeviceId);
+      const interval = setInterval(() => fetchSelectedDeviceData(selectedDeviceId), 5000);
       return () => clearInterval(interval);
     }
   }, [selectedDeviceId, timeRange]);
 
   return (
-    <div className="min-h-screen p-4 md:p-8 max-w-7xl mx-auto">
-      <TopBar onlineAssets={summary.onlineAssets} lastUpdate={summary.lastUpdate} />
-      
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-        {/* Left Sidebar */}
-        <div className="lg:col-span-1 flex flex-col">
-          <AssetList 
-            devices={devices} 
-            selectedDeviceId={selectedDeviceId} 
-            onSelectDevice={setSelectedDeviceId} 
-          />
-          <Regions devices={devices} />
-        </div>
+    <div className="min-h-screen bg-[#020617] text-slate-300 p-4 md:p-6 font-sans">
+      <div className="max-w-[1600px] mx-auto">
+        <TopBar onlineAssets={summary.onlineAssets} lastUpdate={summary.lastUpdate} />
+        
+        <div className="grid grid-cols-1 xl:grid-cols-[300px_1fr_300px] gap-6">
+          {/* Left Sidebar */}
+          <div className="flex flex-col gap-6">
+            <AssetList 
+              devices={devices} 
+              selectedDeviceId={selectedDeviceId}
+              onSelectDevice={setSelectedDeviceId}
+            />
+            <Regions regionSummary={regionSummary} devices={devices} />
+          </div>
 
-        {/* Main Content */}
-        <div className="lg:col-span-3 flex flex-col">
-          <KPIStrip device={latestData} />
-          
-          <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 mt-6">
-            <div className="xl:col-span-2">
+          {/* Main Content */}
+          <div className="flex flex-col gap-6">
+            <KPIStrip device={latestData} />
+            
+            <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6">
               <LiveTrend 
                 data={trendData} 
                 timeRange={timeRange} 
                 onTimeRangeChange={setTimeRange} 
               />
-            </div>
-            <div className="xl:col-span-1">
               <Throughput data={throughput} />
+            </div>
+
+            <div className="h-[300px]">
+              <TopProblemAssets devices={topAnomalous} onSelectDevice={setSelectedDeviceId} />
+            </div>
+          </div>
+
+          {/* Right Sidebar */}
+          <div className="flex flex-col gap-6">
+            <div className="h-[600px]">
+              <AlertsPanel />
             </div>
           </div>
         </div>

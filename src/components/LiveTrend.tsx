@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
+import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from 'recharts';
 
 interface LiveTrendProps {
   data: any[];
@@ -8,100 +8,119 @@ interface LiveTrendProps {
 }
 
 export function LiveTrend({ data, timeRange, onTimeRangeChange }: LiveTrendProps) {
-  const [metric, setMetric] = useState<'temperature' | 'vibration'>('temperature');
+  const [metric, setMetric] = useState<'temperature' | 'vibration' | 'current'>('temperature');
 
   const formatTime = (timeStr: any) => {
     const date = new Date(timeStr);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };
 
-  const chartColor = metric === 'temperature' ? '#EF4444' : '#F59E0B';
+  const getMetricColor = () => {
+    if (metric === 'temperature') return '#ef4444'; // Red
+    if (metric === 'vibration') return '#f59e0b'; // Amber
+    return '#3b82f6'; // Blue
+  };
+  
+  const getThresholds = () => {
+    if (metric === 'temperature') return { warning: 85, critical: 100 };
+    if (metric === 'vibration') return { warning: 6, critical: 10 };
+    return null;
+  };
+
+  const thresholds = getThresholds();
 
   return (
-    <div className="glass-card p-6 rounded-2xl animate-fade-up delay-200">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+    <div className="glass-card p-6 rounded-2xl flex flex-col h-[400px]">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h3 className="text-xl font-bold text-white tracking-tight">Live Trend</h3>
         
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex bg-slate-800/50 p-1 rounded-lg border border-slate-700/50">
-            <button
-              onClick={() => setMetric('temperature')}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                metric === 'temperature' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              Temperature
-            </button>
-            <button
-              onClick={() => setMetric('vibration')}
-              className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-                metric === 'vibration' ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
-              }`}
-            >
-              Vibration
-            </button>
+        <div className="flex gap-4">
+          <div className="flex bg-slate-800/50 p-1 rounded-xl border border-slate-700/50">
+            {(['temperature', 'vibration', 'current'] as const).map(m => (
+              <button
+                key={m}
+                onClick={() => setMetric(m)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
+                  metric === m ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                }`}
+              >
+                {m}
+              </button>
+            ))}
           </div>
 
-          <div className="flex bg-slate-800/50 p-1 rounded-lg border border-slate-700/50">
+          <div className="flex bg-slate-800/50 p-1 rounded-xl border border-slate-700/50">
             {[
               { label: '1H', value: 1 },
               { label: '24H', value: 24 },
               { label: '7D', value: 168 }
-            ].map(range => (
+            ].map(tr => (
               <button
-                key={range.value}
-                onClick={() => onTimeRangeChange(range.value)}
-                className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
-                  timeRange === range.value ? 'bg-blue-600 text-white shadow-sm glow-blue' : 'text-slate-400 hover:text-slate-200'
+                key={tr.label}
+                onClick={() => onTimeRangeChange(tr.value)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
+                  timeRange === tr.value ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
-                {range.label}
+                {tr.label}
               </button>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="h-72 w-full mt-4">
-        <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <defs>
-              <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="5%" stopColor={chartColor} stopOpacity={0.3}/>
-                <stop offset="95%" stopColor={chartColor} stopOpacity={0}/>
-              </linearGradient>
-            </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} opacity={0.5} />
-            <XAxis 
-              dataKey="timestamp" 
-              tickFormatter={formatTime} 
-              stroke="#64748b" 
-              fontSize={12} 
-              tickLine={false}
-              axisLine={false}
-              minTickGap={30}
-            />
-            <YAxis 
-              stroke="#64748b" 
-              fontSize={12}
-              tickLine={false}
-              axisLine={false}
-            />
-            <Tooltip 
-              contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '12px', color: '#f8fafc' }}
-              labelFormatter={formatTime}
-            />
-            <Area 
-              type="monotone" 
-              dataKey={metric} 
-              stroke={chartColor} 
-              strokeWidth={3}
-              fillOpacity={1} 
-              fill="url(#colorMetric)" 
-              animationDuration={500}
-            />
-          </AreaChart>
-        </ResponsiveContainer>
+      <div className="flex-1 w-full relative">
+        {data.length === 0 ? (
+          <div className="absolute inset-0 flex items-center justify-center text-slate-500">
+            Waiting for telemetry data...
+          </div>
+        ) : (
+          <ResponsiveContainer width="100%" height="100%">
+            <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <defs>
+                <linearGradient id="colorMetric" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor={getMetricColor()} stopOpacity={0.3}/>
+                  <stop offset="95%" stopColor={getMetricColor()} stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+              <XAxis 
+                dataKey="timestamp" 
+                tickFormatter={formatTime}
+                stroke="#64748b"
+                fontSize={10}
+                tickMargin={10}
+              />
+              <YAxis 
+                stroke="#64748b"
+                fontSize={10}
+                tickFormatter={(val) => Math.round(val).toString()}
+              />
+              <Tooltip
+                labelFormatter={formatTime}
+                contentStyle={{ backgroundColor: '#0f172a', borderColor: '#334155', borderRadius: '0.75rem' }}
+                itemStyle={{ color: '#f8fafc' }}
+              />
+              
+              {thresholds && (
+                <>
+                  <ReferenceLine y={thresholds.critical} stroke="#ef4444" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'Critical', fill: '#ef4444', fontSize: 10 }} />
+                  <ReferenceLine y={thresholds.warning} stroke="#f59e0b" strokeDasharray="3 3" label={{ position: 'insideTopLeft', value: 'Warning', fill: '#f59e0b', fontSize: 10 }} />
+                </>
+              )}
+
+              <Area 
+                type="monotone" 
+                dataKey={metric} 
+                stroke={getMetricColor()} 
+                strokeWidth={2}
+                fillOpacity={1} 
+                fill="url(#colorMetric)"
+                isAnimationActive={false}
+              />
+            </AreaChart>
+          </ResponsiveContainer>
+        )}
       </div>
     </div>
   );
