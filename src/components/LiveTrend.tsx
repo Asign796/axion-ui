@@ -31,12 +31,12 @@ export function LiveTrend({ data, timeRange, onTimeRangeChange }: LiveTrendProps
   const thresholds = getThresholds();
 
   return (
-    <div className="glass-card p-6 rounded-2xl flex flex-col h-[400px]">
+    <div className="glass-card p-6 rounded-md flex flex-col h-[400px]">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h3 className="text-xl font-bold text-white tracking-tight">Live Trend</h3>
         
         <div className="flex gap-4">
-          <div className="flex bg-slate-800/50 p-1 rounded-xl border border-slate-700/50">
+          <div className="flex bg-slate-800/50 p-1 rounded-sm border border-slate-700/50">
             {(['temperature', 'vibration', 'current'] as const).map(m => (
               <button
                 key={m}
@@ -50,7 +50,7 @@ export function LiveTrend({ data, timeRange, onTimeRangeChange }: LiveTrendProps
             ))}
           </div>
 
-          <div className="flex bg-slate-800/50 p-1 rounded-xl border border-slate-700/50">
+          <div className="flex bg-slate-800/50 p-1 rounded-sm border border-slate-700/50">
             {[
               { label: '1H', value: 1 },
               { label: '24H', value: 24 },

@@ -1,55 +1,85 @@
-import { Activity, Database, Server, Wifi } from 'lucide-react';
+import { Database, Server, Wifi, User, LogOut } from 'lucide-react';
+import { useState } from 'react';
 
 interface TopBarProps {
   onlineAssets: number;
   lastUpdate: string;
+  onLogout: () => void;
 }
 
-export function TopBar({ onlineAssets, lastUpdate }: TopBarProps) {
+export function TopBar({ onlineAssets, lastUpdate, onLogout }: TopBarProps) {
+  const [showProfile, setShowProfile] = useState(false);
+
   return (
-    <header className="glass-card px-6 py-4 mb-6 rounded-2xl animate-fade-up flex flex-col md:flex-row items-center justify-between gap-4">
+    <header className="bg-[#171717] border-b border-[#262626] px-6 py-3 mb-6 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-10">
       <div className="flex items-center gap-4">
-        <div className="w-10 h-10 rounded-xl bg-blue-500/10 flex items-center justify-center border border-blue-500/20 glow-blue">
-          <Activity className="text-blue-500 w-5 h-5 pulse-glow" />
-        </div>
         <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">AXION</h1>
-          <p className="text-sm text-slate-400">Continuous Condition Monitoring</p>
+          <h1 className="text-xl font-bold text-white tracking-tight uppercase">Plant Overview</h1>
+          <p className="text-xs text-slate-400 font-medium">System 1 Dashboard</p>
         </div>
       </div>
       
       <div className="flex items-center gap-6">
-        <div className="hidden md:flex items-center gap-4 text-xs font-medium px-4 py-2 bg-slate-800/50 rounded-xl border border-slate-700/50">
-          <span className="text-slate-400">System Health:</span>
-          <div className="flex items-center gap-1">
-            <Wifi className="w-3 h-3 text-green-400" />
+        <div className="hidden md:flex items-center gap-4 text-xs font-medium px-4 py-1.5 bg-[#0a0a0a] rounded border border-[#262626]">
+          <span className="text-slate-500 uppercase tracking-widest">System Health:</span>
+          <div className="flex items-center gap-1.5">
+            <Wifi className="w-3 h-3 text-green-500" />
             <span className="text-slate-300">API</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Database className="w-3 h-3 text-green-400" />
+          <div className="flex items-center gap-1.5">
+            <Database className="w-3 h-3 text-green-500" />
             <span className="text-slate-300">DB</span>
           </div>
-          <div className="flex items-center gap-1">
-            <Server className="w-3 h-3 text-green-400" />
+          <div className="flex items-center gap-1.5">
+            <Server className="w-3 h-3 text-green-500" />
             <span className="text-slate-300">Sim</span>
           </div>
         </div>
 
-        <div className="text-right flex flex-col items-end">
+        <div className="text-right flex flex-col items-end border-r border-[#262626] pr-6">
           <div className="flex items-center gap-3 mb-1">
-            <div className="flex items-center gap-2 bg-red-500/10 px-2 py-1 rounded-md border border-red-500/20">
-              <span className="relative flex h-2 w-2">
+            <div className="flex items-center gap-2 bg-red-500/10 px-2 py-0.5 rounded border border-red-500/20">
+              <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-red-500"></span>
               </span>
-              <span className="text-[10px] uppercase font-bold text-red-400 tracking-wider">Live Stream</span>
+              <span className="text-[9px] uppercase font-bold text-red-400 tracking-widest">Live Stream</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-medium text-slate-200">{onlineAssets} Assets Online</span>
+              <span className="text-sm font-bold text-slate-200">{onlineAssets} Assets Online</span>
             </div>
           </div>
-          <p className="text-xs text-slate-500 font-mono">Last Update: {lastUpdate}</p>
+          <p className="text-[10px] text-slate-500 font-mono tracking-wider">Last Update: {lastUpdate}</p>
         </div>
+
+        {/* User Profile */}
+        <div className="relative">
+          <button 
+            onClick={() => setShowProfile(!showProfile)}
+            className="flex items-center gap-2 hover:bg-[#262626] p-2 rounded transition-colors"
+          >
+            <div className="w-8 h-8 rounded-full bg-[#0a0a0a] border border-[#404040] flex items-center justify-center">
+              <User className="w-4 h-4 text-slate-300" />
+            </div>
+          </button>
+
+          {showProfile && (
+            <div className="absolute right-0 mt-2 w-64 bg-[#171717] border border-[#262626] rounded-md shadow-2xl overflow-hidden py-2">
+              <div className="px-4 py-3 border-b border-[#262626] mb-1">
+                <p className="text-xs font-bold text-white">System Admin</p>
+                <p className="text-[10px] text-slate-400 truncate">info@devopsinsiders.com</p>
+              </div>
+              <button 
+                onClick={onLogout}
+                className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-[#262626] flex items-center gap-2 transition-colors"
+              >
+                <LogOut className="w-4 h-4" />
+                Sign Out
+              </button>
+            </div>
+          )}
+        </div>
+
       </div>
     </header>
   );

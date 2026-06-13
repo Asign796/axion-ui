@@ -8,7 +8,7 @@ interface RegionsProps {
 export function Regions({ regionSummary }: RegionsProps) {
   if (!regionSummary || regionSummary.length === 0) {
      return (
-        <div className="glass-card p-4 rounded-2xl animate-fade-up delay-500">
+        <div className="glass-card p-4 rounded-md animate-fade-up delay-500">
           <div className="flex items-center gap-2 mb-4 px-2">
             <MapPin className="text-blue-500 w-5 h-5" />
             <h3 className="text-lg font-bold text-white tracking-tight">Regions</h3>
@@ -19,7 +19,7 @@ export function Regions({ regionSummary }: RegionsProps) {
   }
 
   return (
-    <div className="glass-card p-4 rounded-2xl animate-fade-up delay-500">
+    <div className="glass-card p-4 rounded-md animate-fade-up delay-500">
       <div className="flex items-center gap-2 mb-4 px-2">
         <MapPin className="text-blue-500 w-5 h-5" />
         <h3 className="text-lg font-bold text-white tracking-tight">Regions</h3>
@@ -27,7 +27,7 @@ export function Regions({ regionSummary }: RegionsProps) {
       
       <div className="space-y-3 px-2">
         {regionSummary.map((region) => (
-          <div key={region.region} className="bg-slate-800/30 border border-slate-700/50 p-3 rounded-xl">
+          <div key={region.region} className="bg-slate-800/30 border border-slate-700/50 p-3 rounded-sm">
             <h4 className="font-semibold text-slate-200 mb-2">{region.region}</h4>
             <div className="flex justify-between items-center text-xs">
               <div className="flex items-center gap-1.5">

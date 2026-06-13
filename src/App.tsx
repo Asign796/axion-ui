@@ -7,10 +7,16 @@ import { Throughput } from './components/Throughput';
 import { Regions } from './components/Regions';
 import { TopProblemAssets } from './components/TopProblemAssets';
 import { AlertsPanel } from './components/AlertsPanel';
+import { Sidebar } from './components/Sidebar';
+import { Login } from './components/Login';
 
 const API_BASE = 'https://api.axionsystems.de';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(() => {
+    return localStorage.getItem('axion_auth') === 'true';
+  });
+
   const [summary, setSummary] = useState({ onlineAssets: 0, lastUpdate: '-' });
   const [devices, setDevices] = useState<any[]>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
@@ -18,12 +24,21 @@ function App() {
   const [trendData, setTrendData] = useState<any[]>([]);
   const [timeRange, setTimeRange] = useState<number>(1);
   const [throughput, setThroughput] = useState<any[]>([]);
-  
-  // New State variables
   const [topAnomalous, setTopAnomalous] = useState<any[]>([]);
   const [regionSummary, setRegionSummary] = useState<any[]>([]);
 
+  const handleLogin = () => {
+    localStorage.setItem('axion_auth', 'true');
+    setIsLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('axion_auth');
+    setIsLoggedIn(false);
+  };
+
   const fetchDashboardData = async () => {
+    if (!isLoggedIn) return;
     try {
       const [sumRes, devRes, thruRes, anomRes, regRes] = await Promise.all([
         fetch(`${API_BASE}/dashboard/summary`),
@@ -59,6 +74,7 @@ function App() {
   };
 
   const fetchSelectedDeviceData = async (deviceId: string) => {
+    if (!isLoggedIn) return;
     try {
       const [latestRes, trendRes] = await Promise.all([
         fetch(`${API_BASE}/devices/${deviceId}/latest`),
@@ -75,54 +91,64 @@ function App() {
     fetchDashboardData();
     const interval = setInterval(fetchDashboardData, 5000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isLoggedIn]);
 
   useEffect(() => {
-    if (selectedDeviceId) {
+    if (selectedDeviceId && isLoggedIn) {
       fetchSelectedDeviceData(selectedDeviceId);
       const interval = setInterval(() => fetchSelectedDeviceData(selectedDeviceId), 5000);
       return () => clearInterval(interval);
     }
-  }, [selectedDeviceId, timeRange]);
+  }, [selectedDeviceId, timeRange, isLoggedIn]);
+
+  if (!isLoggedIn) {
+    return <Login onLogin={handleLogin} />;
+  }
 
   return (
-    <div className="min-h-screen bg-[#020617] text-slate-300 p-4 md:p-6 font-sans">
-      <div className="max-w-[1600px] mx-auto">
-        <TopBar onlineAssets={summary.onlineAssets} lastUpdate={summary.lastUpdate} />
+    <div className="min-h-screen bg-[#09090b] text-slate-300 font-sans flex">
+      <Sidebar />
+      
+      <div className="flex-1 lg:ml-64 ml-16 min-w-0 flex flex-col h-screen overflow-hidden">
+        <TopBar onlineAssets={summary.onlineAssets} lastUpdate={summary.lastUpdate} onLogout={handleLogout} />
         
-        <div className="grid grid-cols-1 xl:grid-cols-[300px_1fr_300px] gap-6">
-          {/* Left Sidebar */}
-          <div className="flex flex-col gap-6">
-            <AssetList 
-              devices={devices} 
-              selectedDeviceId={selectedDeviceId}
-              onSelectDevice={setSelectedDeviceId}
-            />
-            <Regions regionSummary={regionSummary} devices={devices} />
-          </div>
+        <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6 custom-scrollbar">
+          <div className="max-w-[1600px] mx-auto">
+            <div className="grid grid-cols-1 xl:grid-cols-[300px_1fr_300px] gap-4">
+              {/* Left Sidebar */}
+              <div className="flex flex-col gap-4">
+                <AssetList 
+                  devices={devices} 
+                  selectedDeviceId={selectedDeviceId}
+                  onSelectDevice={setSelectedDeviceId}
+                />
+                <Regions regionSummary={regionSummary} devices={devices} />
+              </div>
 
-          {/* Main Content */}
-          <div className="flex flex-col gap-6">
-            <KPIStrip device={latestData} />
-            
-            <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-6">
-              <LiveTrend 
-                data={trendData} 
-                timeRange={timeRange} 
-                onTimeRangeChange={setTimeRange} 
-              />
-              <Throughput data={throughput} />
-            </div>
+              {/* Main Content */}
+              <div className="flex flex-col gap-4">
+                <KPIStrip device={latestData} />
+                
+                <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-4">
+                  <LiveTrend 
+                    data={trendData} 
+                    timeRange={timeRange} 
+                    onTimeRangeChange={setTimeRange} 
+                  />
+                  <Throughput data={throughput} />
+                </div>
 
-            <div className="h-[300px]">
-              <TopProblemAssets devices={topAnomalous} onSelectDevice={setSelectedDeviceId} />
-            </div>
-          </div>
+                <div className="h-[300px]">
+                  <TopProblemAssets devices={topAnomalous} onSelectDevice={setSelectedDeviceId} />
+                </div>
+              </div>
 
-          {/* Right Sidebar */}
-          <div className="flex flex-col gap-6">
-            <div className="h-[600px]">
-              <AlertsPanel />
+              {/* Right Sidebar */}
+              <div className="flex flex-col gap-4">
+                <div className="h-[600px]">
+                  <AlertsPanel />
+                </div>
+              </div>
             </div>
           </div>
         </div>

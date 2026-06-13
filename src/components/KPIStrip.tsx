@@ -10,7 +10,7 @@ export function KPIStrip({ device }: KPIStripProps) {
   const getStatusDisplay = (status: string, score: number) => {
     if (status === 'critical') {
       return (
-        <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 px-4 py-2 rounded-xl">
+        <div className="flex items-center gap-3 bg-red-500/10 border border-red-500/20 px-4 py-2 rounded-sm">
           <ShieldAlert className="w-5 h-5 text-red-500" />
           <div>
             <div className="text-red-500 font-bold uppercase tracking-wider text-xs">Critical</div>
@@ -21,7 +21,7 @@ export function KPIStrip({ device }: KPIStripProps) {
     }
     if (status === 'warning') {
       return (
-        <div className="flex items-center gap-3 bg-amber-500/10 border border-amber-500/20 px-4 py-2 rounded-xl">
+        <div className="flex items-center gap-3 bg-amber-500/10 border border-amber-500/20 px-4 py-2 rounded-sm">
           <Shield className="w-5 h-5 text-amber-500" />
           <div>
             <div className="text-amber-500 font-bold uppercase tracking-wider text-xs">Warning</div>
@@ -31,7 +31,7 @@ export function KPIStrip({ device }: KPIStripProps) {
       );
     }
     return (
-      <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/20 px-4 py-2 rounded-xl">
+      <div className="flex items-center gap-3 bg-green-500/10 border border-green-500/20 px-4 py-2 rounded-sm">
         <ShieldCheck className="w-5 h-5 text-green-500" />
         <div>
           <div className="text-green-500 font-bold uppercase tracking-wider text-xs">Healthy</div>
@@ -46,7 +46,7 @@ export function KPIStrip({ device }: KPIStripProps) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <span className="text-slate-400 font-medium tracking-wide">Selected Device:</span>
-          <span className="px-4 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-xl text-white font-bold tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+          <span className="px-4 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-sm text-white font-bold tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.1)]">
             {device.device_id}
           </span>
         </div>
@@ -55,7 +55,7 @@ export function KPIStrip({ device }: KPIStripProps) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="glass-card p-6 rounded-2xl animate-fade-up">
+        <div className="glass-card p-6 rounded-md animate-fade-up">
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Temperature</h3>
           <div className="flex items-baseline gap-2">
             <span className="text-4xl font-black text-white tracking-tight">
@@ -65,7 +65,7 @@ export function KPIStrip({ device }: KPIStripProps) {
           </div>
         </div>
 
-        <div className="glass-card p-6 rounded-2xl animate-fade-up delay-100">
+        <div className="glass-card p-6 rounded-md animate-fade-up delay-100">
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Vibration</h3>
           <div className="flex items-baseline gap-2">
             <span className="text-4xl font-black text-white tracking-tight">
@@ -75,7 +75,7 @@ export function KPIStrip({ device }: KPIStripProps) {
           </div>
         </div>
 
-        <div className="glass-card p-6 rounded-2xl animate-fade-up delay-200">
+        <div className="glass-card p-6 rounded-md animate-fade-up delay-200">
           <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Current</h3>
           <div className="flex items-baseline gap-2">
             <span className="text-4xl font-black text-white tracking-tight">

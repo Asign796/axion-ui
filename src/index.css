@@ -1,17 +1,17 @@
 @import "tailwindcss";
 
 @theme {
-  --color-dark-950: #06080D;
-  --color-dark-900: #0A0F1A;
-  --color-dark-800: #111827;
-  --color-dark-700: #1A2236;
-  --color-dark-600: #243049;
-  --color-dark-500: #334155;
-  --color-dark-400: #475569;
-  --color-dark-300: #94A3B8;
-  --color-dark-200: #CBD5E1;
-  --color-dark-100: #E2E8F0;
-  --color-dark-50: #F1F5F9;
+  --color-dark-950: #000000;
+  --color-dark-900: #0a0a0a;
+  --color-dark-800: #171717;
+  --color-dark-700: #262626;
+  --color-dark-600: #404040;
+  --color-dark-500: #525252;
+  --color-dark-400: #737373;
+  --color-dark-300: #a3a3a3;
+  --color-dark-200: #d4d4d4;
+  --color-dark-100: #e5e5e5;
+  --color-dark-50: #fafafa;
 
   --color-primary: #3B82F6;
   --color-primary-dark: #2563EB;
@@ -22,9 +22,9 @@
   --color-warning: #F59E0B;
   --color-critical: #EF4444;
 
-  --color-glass: rgba(255, 255, 255, 0.03);
-  --color-glass-border: rgba(255, 255, 255, 0.06);
-  --color-glass-hover: rgba(255, 255, 255, 0.06);
+  --color-glass: rgba(23, 23, 23, 1);
+  --color-glass-border: rgba(64, 64, 64, 1);
+  --color-glass-hover: rgba(38, 38, 38, 1);
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
 }
@@ -101,7 +101,7 @@ body {
 
 .animate-fade-up {
   opacity: 0;
-  animation: fadeUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: fadeUp 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .delay-100 { animation-delay: 100ms; }
@@ -125,9 +125,7 @@ body {
 .glass-card {
   background: var(--color-glass);
   border: 1px solid var(--color-glass-border);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: all 0.15s ease-in-out;
 }
 
 .glass-card:hover {

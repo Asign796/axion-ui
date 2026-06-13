@@ -8,7 +8,7 @@ interface TopProblemAssetsProps {
 export function TopProblemAssets({ devices, onSelectDevice }: TopProblemAssetsProps) {
   if (!devices || devices.length === 0) {
     return (
-      <div className="glass-card p-6 rounded-2xl animate-fade-up h-full flex flex-col">
+      <div className="glass-card p-6 rounded-md animate-fade-up h-full flex flex-col">
         <h3 className="text-xl font-bold text-white tracking-tight mb-4">Top Problem Assets</h3>
         <div className="flex-1 flex items-center justify-center text-slate-500">
           No anomalous assets detected
@@ -18,7 +18,7 @@ export function TopProblemAssets({ devices, onSelectDevice }: TopProblemAssetsPr
   }
 
   return (
-    <div className="glass-card p-6 rounded-2xl animate-fade-up h-full flex flex-col">
+    <div className="glass-card p-6 rounded-md animate-fade-up h-full flex flex-col">
       <div className="flex items-center gap-2 mb-4">
         <AlertTriangle className="text-amber-500 w-5 h-5" />
         <h3 className="text-xl font-bold text-white tracking-tight">Top Problem Assets</h3>
@@ -47,7 +47,7 @@ export function TopProblemAssets({ devices, onSelectDevice }: TopProblemAssetsPr
             <button
               key={device.device_id}
               onClick={() => onSelectDevice(device.device_id)}
-              className="w-full text-left bg-slate-800/30 hover:bg-slate-800/60 border border-slate-700/50 hover:border-slate-500/50 p-3 rounded-xl transition-all flex items-center justify-between group"
+              className="w-full text-left bg-slate-800/30 hover:bg-slate-800/60 border border-slate-700/50 hover:border-slate-500/50 p-3 rounded-sm transition-all flex items-center justify-between group"
             >
               <div className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 border border-slate-700">

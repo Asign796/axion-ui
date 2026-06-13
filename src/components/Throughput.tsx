@@ -7,7 +7,7 @@ interface ThroughputProps {
 
 export function Throughput({ data }: ThroughputProps) {
   return (
-    <div className="glass-card p-6 rounded-2xl animate-fade-up delay-400">
+    <div className="glass-card p-6 rounded-md animate-fade-up delay-400">
       <h3 className="text-lg font-bold text-white tracking-tight mb-4">Telemetry Throughput</h3>
       <p className="text-sm text-slate-400 mb-6">Records per Minute (Last Hour)</p>
       
