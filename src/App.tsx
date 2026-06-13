@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { TopBar } from './components/TopBar';
 import { KPIStrip } from './components/KPIStrip';
 import { LiveTrend } from './components/LiveTrend';

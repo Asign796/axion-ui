@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts';
 
 interface LiveTrendProps {
@@ -10,7 +10,7 @@ interface LiveTrendProps {
 export function LiveTrend({ data, timeRange, onTimeRangeChange }: LiveTrendProps) {
   const [metric, setMetric] = useState<'temperature' | 'vibration'>('temperature');
 
-  const formatTime = (timeStr: string) => {
+  const formatTime = (timeStr: any) => {
     const date = new Date(timeStr);
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   };

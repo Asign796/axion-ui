@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { ResponsiveContainer, BarChart, Bar, XAxis, Tooltip, CartesianGrid } from 'recharts';
 
 interface ThroughputProps {
