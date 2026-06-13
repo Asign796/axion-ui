@@ -127,7 +127,7 @@ function App() {
         return (
           <FleetSummary 
             regionSummary={regionSummary} 
-            onSelectRegion={(region) => {
+            onSelectRegion={() => {
               // For now just route to dashboard, in future could filter devices
               setCurrentView('dashboard');
             }} 
