@@ -5,7 +5,6 @@ import { LiveTrend } from './components/LiveTrend';
 import { AssetList } from './components/AssetList';
 import { Throughput } from './components/Throughput';
 import { Regions } from './components/Regions';
-import { TopProblemAssets } from './components/TopProblemAssets';
 import { AlertsPanel } from './components/AlertsPanel';
 import { Sidebar } from './components/Sidebar';
 import { Login } from './components/Login';
@@ -160,16 +159,12 @@ function App() {
                     />
                     <Throughput data={throughput} />
                   </div>
-
-                  <div className="h-[300px]">
-                    <TopProblemAssets devices={topAnomalous} onSelectDevice={setSelectedDeviceId} />
-                  </div>
                 </div>
 
                 {/* Right Sidebar */}
                 <div className="flex flex-col gap-4">
                   <div className="h-[600px]">
-                    <AlertsPanel />
+                    <AlertsPanel devices={topAnomalous} onSelectDevice={setSelectedDeviceId} />
                   </div>
                 </div>
               </div>
