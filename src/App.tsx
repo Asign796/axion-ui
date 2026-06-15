@@ -151,7 +151,7 @@ function App() {
                 <div className="flex flex-col gap-4">
                   <KPIStrip device={latestData} />
                   
-                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-4 flex-1">
+                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-4">
                     <LiveTrend 
                       data={trendData} 
                       timeRange={timeRange} 

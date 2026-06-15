@@ -31,7 +31,7 @@ export function LiveTrend({ data, timeRange, onTimeRangeChange }: LiveTrendProps
   const thresholds = getThresholds();
 
   return (
-    <div className="glass-card p-6 rounded-md flex flex-col h-full min-h-[400px]">
+    <div className="glass-card p-6 rounded-md flex flex-col h-[400px]">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h3 className="text-xl font-bold text-white tracking-tight">Live Trend</h3>
         
