@@ -47,23 +47,21 @@ export function AlertsPanel({ devices, onSelectDevice }: AlertsPanelProps) {
             <button
               key={device.device_id}
               onClick={() => onSelectDevice(device.device_id)}
-              className="w-full text-left bg-slate-800/30 hover:bg-slate-800/60 border border-slate-700/50 hover:border-slate-500/50 p-3 rounded-sm transition-all flex items-center justify-between group"
+              className="w-full text-left bg-slate-800/30 hover:bg-slate-800/60 border border-slate-700/50 hover:border-slate-500/50 p-3 rounded-sm transition-all flex items-start gap-3 group"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 border border-slate-700">
-                  {idx + 1}
-                </div>
-                <div>
-                  <h4 className="font-semibold text-slate-200 group-hover:text-white transition-colors">{device.device_id}</h4>
-                  <p className="text-xs text-slate-400">{device.refinery_region}</p>
-                </div>
+              <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center text-xs font-bold text-slate-400 border border-slate-700 mt-0.5 shrink-0">
+                {idx + 1}
               </div>
-              <div className="text-right flex items-center gap-2">
-                <div className="flex flex-col items-end">
-                  <span className={`text-xs font-bold ${colorClass}`}>{reason}</span>
-                  <span className="text-[10px] text-slate-500">Health: {device.health_score}%</span>
+              <div className="flex-1 min-w-0">
+                <h4 className="font-semibold text-slate-200 group-hover:text-white transition-colors truncate">{device.device_id}</h4>
+                <p className="text-xs text-slate-400 truncate mb-2">{device.refinery_region}</p>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <Icon className={`w-3.5 h-3.5 ${colorClass} opacity-80 shrink-0`} />
+                    <span className={`text-[11px] font-bold ${colorClass} truncate`}>{reason}</span>
+                  </div>
+                  <span className="text-[10px] text-slate-500 shrink-0 ml-2">Health: {device.health_score}%</span>
                 </div>
-                <Icon className={`w-4 h-4 ${colorClass} opacity-80`} />
               </div>
             </button>
           );
