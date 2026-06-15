@@ -7,11 +7,11 @@ interface ThroughputProps {
 
 export function Throughput({ data }: ThroughputProps) {
   return (
-    <div className="glass-card p-6 rounded-md animate-fade-up delay-400">
+    <div className="glass-card p-6 rounded-md animate-fade-up delay-400 flex flex-col h-full min-h-[400px]">
       <h3 className="text-lg font-bold text-white tracking-tight mb-4">Telemetry Throughput</h3>
       <p className="text-sm text-slate-400 mb-6">Records per Minute (Last Hour)</p>
       
-      <div className="h-48 w-full">
+      <div className="flex-1 w-full min-h-0">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} opacity={0.3} />

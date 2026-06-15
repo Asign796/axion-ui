@@ -1,12 +1,33 @@
 import { AlertTriangle, Bell, Info } from 'lucide-react';
 
-export function AlarmsEvents() {
-  const alarms = [
-    { id: 'ALM-001', time: '10:45:22', level: 'CRITICAL', device: 'COMPRESSOR_E01', message: 'Temperature exceeded 100°C' },
-    { id: 'ALM-002', time: '10:42:15', level: 'WARNING', device: 'PUMP_N02', message: 'Vibration deviation detected' },
-    { id: 'EVT-001', time: '09:30:00', level: 'INFO', device: 'MOTOR_S01', message: 'System maintenance scheduled' },
-    { id: 'ALM-003', time: '08:15:44', level: 'CRITICAL', device: 'COMPRESSOR_E01', message: 'Vibration exceeded 10mm/s' },
-  ];
+interface AlarmsEventsProps {
+  devices: any[];
+}
+
+export function AlarmsEvents({ devices }: AlarmsEventsProps) {
+  const alarms = devices.map((d, i) => {
+    let level = 'WARNING';
+    let msg = 'Warning threshold reached';
+    if (d.temperature > 100) {
+      level = 'CRITICAL';
+      msg = `Temperature exceeded 100°C (${d.temperature.toFixed(1)}°C)`;
+    } else if (d.vibration > 10) {
+      level = 'CRITICAL';
+      msg = `Vibration exceeded 10mm/s (${d.vibration.toFixed(1)} mm/s)`;
+    } else if (d.temperature > 85) {
+      msg = `Temperature warning (${d.temperature.toFixed(1)}°C)`;
+    } else if (d.vibration > 6) {
+      msg = `Vibration warning (${d.vibration.toFixed(1)} mm/s)`;
+    }
+
+    return {
+      id: `ALM-${(i+1).toString().padStart(3, '0')}`,
+      time: new Date(d.last_seen.endsWith('Z') ? d.last_seen : `${d.last_seen}Z`).toLocaleTimeString(),
+      level: level,
+      device: d.device_id,
+      message: msg
+    };
+  });
 
   const getLevelColor = (level: string) => {
     if (level === 'CRITICAL') return 'text-red-500 bg-red-500/10 border-red-500/20';
@@ -42,7 +63,10 @@ export function AlarmsEvents() {
         </div>
         
         <div className="flex-1 overflow-y-auto custom-scrollbar">
-          {alarms.map((alarm, idx) => (
+          {alarms.length === 0 ? (
+            <div className="p-8 text-center text-slate-500">No active alarms or events to display.</div>
+          ) : (
+            alarms.map((alarm, idx) => (
             <div key={idx} className="grid grid-cols-[100px_100px_120px_150px_1fr] gap-4 p-4 border-b border-[#262626] hover:bg-[#262626]/50 transition-colors text-sm items-center">
               <div className="text-slate-500 font-mono">{alarm.id}</div>
               <div className="text-slate-300">{alarm.time}</div>
@@ -55,7 +79,7 @@ export function AlarmsEvents() {
               <div className="text-white font-medium">{alarm.device}</div>
               <div className="text-slate-400">{alarm.message}</div>
             </div>
-          ))}
+          )))}
         </div>
       </div>
     </div>
