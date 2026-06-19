@@ -1,11 +1,6 @@
 import { useState, useEffect } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { TopBar } from './components/TopBar';
-import { KPIStrip } from './components/KPIStrip';
-import { LiveTrend } from './components/LiveTrend';
-import { AssetList } from './components/AssetList';
-import { Throughput } from './components/Throughput';
-import { Regions } from './components/Regions';
-import { AlertsPanel } from './components/AlertsPanel';
 import { Sidebar } from './components/Sidebar';
 import { Login } from './components/Login';
 import { formatAppDate } from './utils/date';
@@ -15,7 +10,9 @@ import { FleetSummary } from './components/pages/FleetSummary';
 import { AssetHierarchy } from './components/pages/AssetHierarchy';
 import { AlarmsEvents } from './components/pages/AlarmsEvents';
 import { HistoricalTrends } from './components/pages/HistoricalTrends';
+import { SystemTopology } from './components/pages/SystemTopology';
 import { SystemSettings } from './components/pages/SystemSettings';
+import { DashboardView } from './components/pages/DashboardView';
 
 const API_BASE = 'https://api.axionsystems.de';
 
@@ -24,15 +21,10 @@ function App() {
     return localStorage.getItem('axion_auth') === 'true';
   });
   
-  const [currentView, setCurrentView] = useState('fleet');
   const [refreshInterval, setRefreshInterval] = useState<number | null>(5000);
 
   const [summary, setSummary] = useState({ onlineAssets: 0, lastUpdateRaw: '' });
   const [devices, setDevices] = useState<any[]>([]);
-  const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
-  const [latestData, setLatestData] = useState<any>(null);
-  const [trendData, setTrendData] = useState<any[]>([]);
-  const [timeRange, setTimeRange] = useState<number>(1);
   const [throughput, setThroughput] = useState<any[]>([]);
   const [topAnomalous, setTopAnomalous] = useState<any[]>([]);
   const [regionSummary, setRegionSummary] = useState<any[]>([]);
@@ -74,26 +66,8 @@ function App() {
       setThroughput(thruData);
       setTopAnomalous(anomData);
       setRegionSummary(regData);
-
-      if (!selectedDeviceId && devData.length > 0) {
-        setSelectedDeviceId(devData[0].device_id);
-      }
     } catch (err) {
       console.error('Failed to fetch dashboard data', err);
-    }
-  };
-
-  const fetchSelectedDeviceData = async (deviceId: string) => {
-    if (!isLoggedIn) return;
-    try {
-      const [latestRes, trendRes] = await Promise.all([
-        fetch(`${API_BASE}/devices/${deviceId}/latest`),
-        fetch(`${API_BASE}/devices/${deviceId}/trends?hours=${timeRange}`)
-      ]);
-      setLatestData(await latestRes.json());
-      setTrendData(await trendRes.json());
-    } catch (err) {
-      console.error(`Failed to fetch data for ${deviceId}`, err);
     }
   };
 
@@ -121,99 +95,9 @@ function App() {
     }
   }, [isLoggedIn, refreshInterval]);
 
-  // Selected Device Loop
-  useEffect(() => {
-    if (selectedDeviceId && isLoggedIn) {
-      fetchSelectedDeviceData(selectedDeviceId);
-      if (refreshInterval !== null) {
-        const intervalId = setInterval(() => fetchSelectedDeviceData(selectedDeviceId), refreshInterval);
-        return () => clearInterval(intervalId);
-      }
-    }
-  }, [selectedDeviceId, timeRange, isLoggedIn, refreshInterval]);
-
   if (!isLoggedIn) {
     return <Login onLogin={handleLogin} />;
   }
-
-  const renderCurrentView = () => {
-    switch (currentView) {
-      case 'fleet':
-        return (
-          <FleetSummary 
-            regionSummary={regionSummary} 
-            onSelectRegion={() => {
-              setCurrentView('dashboard');
-            }} 
-          />
-        );
-      case 'dashboard':
-        return (
-          <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6 custom-scrollbar">
-            <div className="max-w-[1600px] mx-auto">
-              <div className="grid grid-cols-1 xl:grid-cols-[300px_1fr_300px] gap-4">
-                <div className="flex flex-col gap-4">
-                  <AssetList 
-                    devices={devices} 
-                    selectedDeviceId={selectedDeviceId}
-                    onSelectDevice={setSelectedDeviceId}
-                  />
-                  <Regions regionSummary={regionSummary} devices={devices} />
-                </div>
-                <div className="flex flex-col gap-4">
-                  <KPIStrip device={latestData} />
-                  <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-4">
-                    <LiveTrend 
-                      data={trendData} 
-                      timeRange={timeRange} 
-                      onTimeRangeChange={setTimeRange} 
-                      timezone={timezone}
-                    />
-                    <Throughput data={throughput} />
-                  </div>
-                </div>
-                <div className="flex flex-col gap-4">
-                  <div className="h-[600px]">
-                    <AlertsPanel devices={topAnomalous} onSelectDevice={setSelectedDeviceId} />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      case 'hierarchy':
-        return (
-          <AssetHierarchy 
-            devices={devices} 
-            onSelectDevice={(id) => {
-              setSelectedDeviceId(id);
-              setCurrentView('dashboard');
-            }} 
-          />
-        );
-      case 'alarms':
-        return <AlarmsEvents devices={topAnomalous} timezone={timezone} />;
-      case 'trends':
-        return <HistoricalTrends />;
-      case 'settings':
-        return (
-          <SystemSettings 
-            refreshInterval={refreshInterval} 
-            onRefreshIntervalChange={setRefreshInterval}
-            theme={theme}
-            onThemeChange={setTheme}
-            density={density}
-            onDensityChange={setDensity}
-            animation={animation}
-            onAnimationChange={setAnimation}
-            timezone={timezone}
-            onTimezoneChange={setTimezone}
-          />
-        );
-      default:
-        return <div className="p-6 text-white">View not found</div>;
-    }
-  };
 
   return (
     <div className="min-h-screen bg-[#09090b] text-slate-300 font-sans flex relative overflow-hidden noise-bg">
@@ -234,12 +118,60 @@ function App() {
       <div className="fixed inset-0 opacity-[0.03] z-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, white 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
 
       <div className="z-10 flex w-full relative">
-        <Sidebar currentView={currentView} onViewChange={setCurrentView} />
+        <Sidebar />
         
         <div className="flex-1 lg:ml-64 ml-16 min-w-0 flex flex-col h-screen overflow-hidden">
           <TopBar onlineAssets={summary.onlineAssets} lastUpdate={formatAppDate(summary.lastUpdateRaw, timezone)} onLogout={handleLogout} />
           
-          {renderCurrentView()}
+          <Routes>
+            <Route path="/" element={<Navigate to="/fleet" replace />} />
+            
+            <Route path="/fleet" element={
+              <FleetSummary regionSummary={regionSummary} />
+            } />
+            
+            <Route path="/device/:region/:deviceId" element={
+              <DashboardView 
+                devices={devices} 
+                throughput={throughput} 
+                topAnomalous={topAnomalous} 
+                isLoggedIn={isLoggedIn} 
+                refreshInterval={refreshInterval} 
+                timezone={timezone} 
+              />
+            } />
+            
+            <Route path="/device" element={
+              <DashboardView 
+                devices={devices} 
+                throughput={throughput} 
+                topAnomalous={topAnomalous} 
+                isLoggedIn={isLoggedIn} 
+                refreshInterval={refreshInterval} 
+                timezone={timezone} 
+              />
+            } />
+            
+            <Route path="/hierarchy" element={<AssetHierarchy devices={devices} />} />
+            <Route path="/topology" element={<SystemTopology devices={devices} />} />
+            <Route path="/alarms" element={<AlarmsEvents devices={topAnomalous} timezone={timezone} />} />
+            <Route path="/correlation" element={<HistoricalTrends devices={devices} />} />
+            
+            <Route path="/settings" element={
+              <SystemSettings 
+                refreshInterval={refreshInterval} 
+                onRefreshIntervalChange={setRefreshInterval}
+                theme={theme}
+                onThemeChange={setTheme}
+                density={density}
+                onDensityChange={setDensity}
+                animation={animation}
+                onAnimationChange={setAnimation}
+                timezone={timezone}
+                onTimezoneChange={setTimezone}
+              />
+            } />
+          </Routes>
         </div>
       </div>
     </div>

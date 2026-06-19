@@ -1,11 +1,12 @@
 import { Activity, AlertTriangle, Building, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 interface FleetSummaryProps {
   regionSummary: any[];
-  onSelectRegion: (region: string) => void;
 }
 
-export function FleetSummary({ regionSummary, onSelectRegion }: FleetSummaryProps) {
+export function FleetSummary({ regionSummary }: FleetSummaryProps) {
+  const navigate = useNavigate();
   // Aggregate totals across all regions
   const totalAssets = regionSummary.reduce((acc, r) => acc + r.total_devices, 0);
   const totalOnline = regionSummary.reduce((acc, r) => acc + r.online_devices, 0);
@@ -65,12 +66,14 @@ export function FleetSummary({ regionSummary, onSelectRegion }: FleetSummaryProp
                   <p className="text-xs text-slate-500 uppercase tracking-widest font-bold">Refinery</p>
                 </div>
               </div>
-              <button 
-                onClick={() => onSelectRegion(region.region)}
-                className="text-sm font-bold text-theme-base hover:text-theme-light flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
-              >
-                View Diagnostics <ArrowRight className="w-4 h-4" />
-              </button>
+              <div className="mt-6 flex justify-end">
+                <button 
+                  onClick={() => navigate('/device')}
+                  className="flex items-center gap-2 text-theme-light text-sm font-bold hover:text-white transition-colors group/btn"
+                >
+                  View Devices <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
+                </button>
+              </div>
             </div>
             
             <div className="grid grid-cols-3 divide-x divide-[#262626] p-5">

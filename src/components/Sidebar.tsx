@@ -1,18 +1,19 @@
-import { LayoutDashboard, Server, AlertTriangle, LineChart, Settings } from 'lucide-react';
+import { LayoutDashboard, Server, AlertTriangle, LineChart, Settings, Network } from 'lucide-react';
 
-interface SidebarProps {
-  currentView: string;
-  onViewChange: (view: string) => void;
-}
+import { NavLink, useLocation } from 'react-router-dom';
 
-export function Sidebar({ currentView, onViewChange }: SidebarProps) {
+export function Sidebar() {
+  const location = useLocation();
+  const currentPath = location.pathname;
+
   const menuItems = [
-    { id: 'fleet', icon: LayoutDashboard, label: 'Fleet Summary' },
-    { id: 'dashboard', icon: Server, label: 'Device Diagnostics' },
-    { id: 'hierarchy', icon: Server, label: 'Asset Hierarchy' },
-    { id: 'alarms', icon: AlertTriangle, label: 'Alarms & Events' },
-    { id: 'trends', icon: LineChart, label: 'Historical Trends' },
-    { id: 'settings', icon: Settings, label: 'System Settings' },
+    { path: '/fleet', icon: LayoutDashboard, label: 'Fleet Summary' },
+    { path: '/device', icon: Server, label: 'Device Diagnostics' },
+    { path: '/hierarchy', icon: Server, label: 'Asset Hierarchy' },
+    { path: '/topology', icon: Network, label: 'System Topology' },
+    { path: '/alarms', icon: AlertTriangle, label: 'Alarms & Events' },
+    { path: '/correlation', icon: LineChart, label: 'Correlation Engine' },
+    { path: '/settings', icon: Settings, label: 'System Settings' },
   ];
 
   return (
@@ -24,11 +25,12 @@ export function Sidebar({ currentView, onViewChange }: SidebarProps) {
 
       <div className="flex-1 py-6 flex flex-col gap-2">
         {menuItems.map((item) => {
-          const isActive = currentView === item.id;
+          // Special active check for /device to cover /device/:region/:deviceId
+          const isActive = currentPath.startsWith(item.path);
           return (
-            <button
-              key={item.id}
-              onClick={() => onViewChange(item.id)}
+            <NavLink
+              key={item.path}
+              to={item.path}
               className={`w-full flex items-center gap-4 px-4 lg:px-6 py-3 transition-colors ${
                 isActive 
                   ? 'bg-[#171717] border-r-2 border-theme-base' 
@@ -39,7 +41,7 @@ export function Sidebar({ currentView, onViewChange }: SidebarProps) {
               <span className={`hidden lg:block font-medium text-sm ${isActive ? 'text-white' : ''}`}>
                 {item.label}
               </span>
-            </button>
+            </NavLink>
           );
         })}
       </div>

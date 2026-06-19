@@ -1,4 +1,4 @@
-import { ShieldAlert, ShieldCheck, Shield } from 'lucide-react';
+import { ShieldAlert, ShieldCheck, Shield, Droplets, Wind, Settings } from 'lucide-react';
 
 interface KPIStripProps {
   device: any;
@@ -46,7 +46,10 @@ export function KPIStrip({ device }: KPIStripProps) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <span className="text-slate-400 font-medium tracking-wide">Selected Device:</span>
-          <span className="px-4 py-1.5 bg-theme-base/10 border border-theme-base/20 rounded-sm text-white font-bold tracking-wider shadow-[0_0_15px_rgba(var(--theme-rgb-base),0.1)]">
+          <span className="px-4 py-1.5 bg-theme-base/10 border border-theme-base/20 rounded-sm text-white font-bold tracking-wider shadow-[0_0_15px_rgba(var(--theme-rgb-base),0.1)] flex items-center gap-2">
+            {device.device_type.toLowerCase().includes('pump') && <Droplets className="w-4 h-4 text-blue-400 opacity-80" />}
+            {device.device_type.toLowerCase().includes('compressor') && <Wind className="w-4 h-4 text-slate-300 opacity-80" />}
+            {device.device_type.toLowerCase().includes('motor') && <Settings className="w-4 h-4 text-amber-500 opacity-80" />}
             {device.device_id}
           </span>
         </div>

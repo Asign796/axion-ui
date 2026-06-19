@@ -44,15 +44,12 @@ export function AlarmsEvents({ devices, timezone }: AlarmsEventsProps) {
   };
 
   return (
-    <div className="p-6 h-full flex flex-col">
+    <div className="p-6 flex-1 min-h-0 flex flex-col">
       <div className="mb-6 border-b border-[#262626] pb-4 flex justify-between items-end">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Alarms & Events</h2>
           <p className="text-sm text-slate-400">Historical log of system alerts and state changes.</p>
         </div>
-        <button className="bg-[#171717] hover:bg-[#262626] border border-[#404040] text-slate-300 px-4 py-2 rounded text-sm font-medium transition-colors">
-          Acknowledge All
-        </button>
       </div>
 
       <div className="flex-1 glass-card rounded-md overflow-hidden flex flex-col animate-fade-up">

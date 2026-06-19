@@ -1,4 +1,4 @@
-import { RefreshCw, Database, User, Shield, Bell, Palette, Layout, Globe } from 'lucide-react';
+import { RefreshCw, Palette, Layout, Globe } from 'lucide-react';
 
 interface SystemSettingsProps {
   refreshInterval: number | null;
@@ -19,13 +19,6 @@ export function SystemSettings({
   density, onDensityChange,
   timezone, onTimezoneChange
 }: SystemSettingsProps) {
-  
-  const sections = [
-    { id: 'db', title: 'Database Configuration', icon: Database, desc: 'Manage TimescaleDB connection pools and retention policies.' },
-    { id: 'users', title: 'User Management', icon: User, desc: 'Role-based access control and API token generation.' },
-    { id: 'security', title: 'Security & Auth', icon: Shield, desc: 'SSO integrations and audit logging.' },
-    { id: 'alarms', title: 'Alarm Rules', icon: Bell, desc: 'Configure threshold bands and notification routing.' },
-  ];
 
   const themes = [
     { id: 'blue', name: 'Blue Premium', gradStart: 'from-blue-600', gradEnd: 'to-purple-600' },
@@ -200,22 +193,6 @@ export function SystemSettings({
         </div>
       </div>
 
-      <div className="mb-4">
-        <h3 className="text-lg font-bold text-white mb-4">Integrations (Coming Soon)</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
-          {sections.map((section) => (
-            <div key={section.id} className="bg-[#171717] border border-[#262626] rounded-md p-6 opacity-50 cursor-not-allowed">
-              <div className="flex items-center gap-4 mb-3">
-                <div className="w-10 h-10 rounded bg-[#0a0a0a] border border-[#404040] flex items-center justify-center">
-                  <section.icon className="w-5 h-5 text-slate-500" />
-                </div>
-                <h3 className="text-lg font-bold text-white">{section.title}</h3>
-              </div>
-              <p className="text-sm text-slate-400 pl-14">{section.desc}</p>
-            </div>
-          ))}
-        </div>
-      </div>
     </div>
   );
 }

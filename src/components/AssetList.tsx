@@ -69,7 +69,7 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
   };
 
   return (
-    <div className="glass-card p-4 rounded-md animate-fade-up delay-300 flex flex-col h-[600px]">
+    <div className="glass-card p-4 rounded-md animate-fade-up delay-300 flex flex-col h-full min-h-[600px]">
       <h3 className="text-xl font-bold text-white tracking-tight mb-3 px-2">Assets Hierarchy</h3>
       
       {/* Search Bar */}
