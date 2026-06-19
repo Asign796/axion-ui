@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Search, LineChart as LineChartIcon, Droplets, Wind, Settings } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { useSearchParams } from 'react-router-dom';
 
 const API_BASE = 'https://api.axionsystems.de';
 
@@ -20,12 +21,45 @@ interface HistoricalTrendsProps {
 }
 
 export function HistoricalTrends({ devices = [] }: HistoricalTrendsProps) {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedDeviceIds, setSelectedDeviceIds] = useState<string[]>([]);
-  const [metric, setMetric] = useState<'temperature' | 'vibration' | 'current'>('temperature');
-  const [timeRange, setTimeRange] = useState<number>(1);
   const [chartData, setChartData] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+
+  // Sync state with URL params
+  const selectedDeviceIds = useMemo(() => {
+    const devicesParam = searchParams.get('devices');
+    return devicesParam ? devicesParam.split(',') : [];
+  }, [searchParams]);
+
+  const metric = (searchParams.get('metric') as 'temperature' | 'vibration' | 'current') || 'temperature';
+  const timeRange = parseInt(searchParams.get('time') || '1', 10);
+
+  // Update URL params
+  const setMetric = (m: string) => {
+    setSearchParams(prev => {
+      prev.set('metric', m);
+      return prev;
+    }, { replace: true });
+  };
+
+  const setTimeRange = (t: number) => {
+    setSearchParams(prev => {
+      prev.set('time', t.toString());
+      return prev;
+    }, { replace: true });
+  };
+
+  const setSelectedDeviceIds = (ids: string[]) => {
+    setSearchParams(prev => {
+      if (ids.length === 0) {
+        prev.delete('devices');
+      } else {
+        prev.set('devices', ids.join(','));
+      }
+      return prev;
+    }, { replace: true });
+  };
 
   const filteredDevices = useMemo(() => {
     return devices.filter(d => 
@@ -35,13 +69,13 @@ export function HistoricalTrends({ devices = [] }: HistoricalTrendsProps) {
   }, [devices, searchTerm]);
 
   const toggleDevice = (deviceId: string) => {
-    setSelectedDeviceIds(prev => {
-      if (prev.includes(deviceId)) {
-        return prev.filter(id => id !== deviceId);
-      }
-      if (prev.length >= 7) return prev; // Limit to 7 devices to prevent chart clutter
-      return [...prev, deviceId];
-    });
+    const current = [...selectedDeviceIds];
+    if (current.includes(deviceId)) {
+      setSelectedDeviceIds(current.filter(id => id !== deviceId));
+    } else {
+      if (current.length >= 7) return; // Limit to 7 devices to prevent chart clutter
+      setSelectedDeviceIds([...current, deviceId]);
+    }
   };
 
   useEffect(() => {
