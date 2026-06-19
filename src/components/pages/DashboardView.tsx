@@ -86,6 +86,19 @@ export function DashboardView({ devices, throughput, isLoggedIn, refreshInterval
   // Auto-redirect if no deviceId but devices are loaded
   useEffect(() => {
     if (!deviceId && devices.length > 0) {
+      // Check for legacy/query string deviceId first (from chatbot links)
+      const queryDeviceId = searchParams.get('deviceId');
+      if (queryDeviceId) {
+        const dev = devices.find((d: any) => d.device_id === queryDeviceId);
+        if (dev) {
+          // Remove deviceId from searchParams to avoid polluting the target URL, keep others like hours/metric
+          const newParams = new URLSearchParams(searchParams);
+          newParams.delete('deviceId');
+          navigate(`/device/${dev.refinery_region}/${dev.device_id}?${newParams.toString()}`, { replace: true });
+          return;
+        }
+      }
+      
       if (region) {
         const regionDevice = devices.find((d: any) => d.refinery_region === region);
         if (regionDevice) {
@@ -96,7 +109,7 @@ export function DashboardView({ devices, throughput, isLoggedIn, refreshInterval
       const first = devices[0];
       navigate(`/device/${first.refinery_region}/${first.device_id}`, { replace: true });
     }
-  }, [deviceId, region, devices, navigate]);
+  }, [deviceId, region, devices, navigate, searchParams]);
 
   const handleSelectDevice = (id: string) => {
     const dev = devices.find((d: any) => d.device_id === id);
