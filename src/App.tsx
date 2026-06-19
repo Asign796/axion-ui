@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { TopBar } from './components/TopBar';
 import { Sidebar } from './components/Sidebar';
 import { Login } from './components/Login';
@@ -17,6 +17,7 @@ import { DashboardView } from './components/pages/DashboardView';
 const API_BASE = 'https://api.axionsystems.de';
 
 function App() {
+  const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(() => {
     return localStorage.getItem('axion_auth') === 'true';
   });
@@ -38,6 +39,36 @@ function App() {
     localStorage.removeItem('axion_auth');
     setIsLoggedIn(false);
   };
+
+  // Dynamically update document.title based on route
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.startsWith('/device/')) {
+      const parts = path.split('/');
+      if (parts.length >= 4) {
+        document.title = `Axion | ${parts[3]}`;
+      } else if (parts.length === 3) {
+        const regionName = parts[2].replace(/_/g, ' ');
+        document.title = `Axion | ${regionName}`;
+      } else {
+        document.title = 'Axion | Device Dashboard';
+      }
+    } else if (path === '/fleet') {
+      document.title = 'Axion | Fleet Summary';
+    } else if (path === '/hierarchy') {
+      document.title = 'Axion | Asset Hierarchy';
+    } else if (path === '/alarms') {
+      document.title = 'Axion | Alarms & Events';
+    } else if (path === '/correlation') {
+      document.title = 'Axion | Correlation Engine';
+    } else if (path === '/topology') {
+      document.title = 'Axion | Global Topology';
+    } else if (path === '/settings') {
+      document.title = 'Axion | Settings';
+    } else {
+      document.title = 'Axion Intelligence Platform';
+    }
+  }, [location]);
 
   const fetchDashboardData = async () => {
     if (!isLoggedIn) return;
