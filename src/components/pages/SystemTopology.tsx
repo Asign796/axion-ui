@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Server, MapPin, Wind, Droplets, Settings, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
+import { Server, MapPin, Wind, Droplets, Settings, ZoomIn, ZoomOut } from 'lucide-react';
 
 interface SystemTopologyProps {
   devices: any[];
@@ -7,7 +7,7 @@ interface SystemTopologyProps {
 
 export function SystemTopology({ devices }: SystemTopologyProps) {
   // Calculate default layout only (stable across telemetry updates)
-  const { defaultEnterprise, defaultRegions, defaultDeviceNodes, svgHeight } = useMemo(() => {
+  const { defaultEnterprise, defaultRegions, defaultDeviceNodes } = useMemo(() => {
     const grouped = devices.reduce((acc, device) => {
       if (!acc[device.refinery_region]) acc[device.refinery_region] = [];
       acc[device.refinery_region].push(device);

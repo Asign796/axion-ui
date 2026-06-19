@@ -134,7 +134,6 @@ function App() {
               <DashboardView 
                 devices={devices} 
                 throughput={throughput} 
-                topAnomalous={topAnomalous} 
                 isLoggedIn={isLoggedIn} 
                 refreshInterval={refreshInterval} 
                 timezone={timezone} 
@@ -145,7 +144,6 @@ function App() {
               <DashboardView 
                 devices={devices} 
                 throughput={throughput} 
-                topAnomalous={topAnomalous} 
                 isLoggedIn={isLoggedIn} 
                 refreshInterval={refreshInterval} 
                 timezone={timezone} 

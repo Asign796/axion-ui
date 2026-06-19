@@ -12,13 +12,12 @@ const API_BASE = 'https://api.axionsystems.de';
 interface DashboardViewProps {
   devices: any[];
   throughput: any[];
-  topAnomalous: any[];
   isLoggedIn: boolean;
   refreshInterval: number | null;
   timezone: string;
 }
 
-export function DashboardView({ devices, throughput, topAnomalous, isLoggedIn, refreshInterval, timezone }: DashboardViewProps) {
+export function DashboardView({ devices, throughput, isLoggedIn, refreshInterval, timezone }: DashboardViewProps) {
   const { deviceId } = useParams();
   const navigate = useNavigate();
 
