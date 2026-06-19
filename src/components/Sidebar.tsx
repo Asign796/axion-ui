@@ -1,4 +1,4 @@
-import { LayoutDashboard, Server, AlertTriangle, LineChart, Settings } from 'lucide-react';
+import { LayoutDashboard, Server, AlertTriangle, LineChart, Settings, Sparkles } from 'lucide-react';
 
 interface SidebarProps {
   currentView: string;
@@ -42,6 +42,30 @@ export function Sidebar({ currentView, onViewChange }: SidebarProps) {
             </button>
           );
         })}
+      </div>
+
+      {/* AI Chat Button */}
+      <div className="p-3 lg:p-4 border-t border-[#262626]">
+        <a
+          href="https://chat.axionsystems.de"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex items-center gap-3 w-full px-3 lg:px-4 py-3 rounded-lg transition-all duration-300
+                     bg-gradient-to-r from-blue-600/20 to-purple-600/20 
+                     border border-blue-500/30 
+                     hover:from-blue-600/30 hover:to-purple-600/30 
+                     hover:border-blue-400/50 hover:shadow-lg hover:shadow-blue-500/10
+                     hover:scale-[1.02] active:scale-[0.98]"
+          style={{ animation: 'pulseGlow 3s ease-in-out infinite' }}
+        >
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center flex-shrink-0 shadow-lg shadow-blue-500/20">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          <div className="hidden lg:flex flex-col items-start">
+            <span className="text-sm font-semibold text-white">AI Assistant</span>
+            <span className="text-[10px] text-slate-400 group-hover:text-slate-300 transition-colors">Ask anything</span>
+          </div>
+        </a>
       </div>
     </div>
   );
