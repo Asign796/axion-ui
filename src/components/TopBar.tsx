@@ -1,4 +1,4 @@
-import { Database, Server, Wifi, User, LogOut } from 'lucide-react';
+import { Database, Server, Wifi, User, LogOut, Sparkles } from 'lucide-react';
 import { useState } from 'react';
 
 interface TopBarProps {
@@ -51,6 +51,17 @@ export function TopBar({ onlineAssets, lastUpdate, onLogout }: TopBarProps) {
           </div>
           <p className="text-[10px] text-slate-500 font-mono tracking-wider">Last Update: {lastUpdate}</p>
         </div>
+
+        {/* AI Assistant Button */}
+        <a
+          href="https://chat.axionsystems.de"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-6 py-2.5 rounded-full font-bold shadow-[0_0_20px_rgba(59,130,246,0.6)] transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(59,130,246,0.9)] border border-blue-400/50"
+        >
+          <Sparkles className="w-5 h-5 animate-pulse text-yellow-300" />
+          <span className="tracking-wide">Ask AI Assistant</span>
+        </a>
 
         {/* User Profile */}
         <div className="relative">
