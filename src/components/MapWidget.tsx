@@ -15,6 +15,7 @@ const REGION_COORDS: Record<string, [number, number]> = {
   'SOUTH_PLANT': [29.7604, -95.3698],    // Houston, TX
   'EAST_REFINERY': [25.2048, 55.2708],   // Dubai, UAE
   'NORTH_PLANT': [57.1497, -2.0943],     // Aberdeen, UK (North Sea)
+  'CENTRAL_REFINERY': [41.8781, -87.6298], // Chicago, IL
 };
 
 // Create a custom glowing icon function
