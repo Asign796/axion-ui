@@ -1,4 +1,5 @@
 import { ShieldAlert, ShieldCheck, Shield, Droplets, Wind, Settings } from 'lucide-react';
+import { ShareLinkButton } from './ShareLinkButton';
 
 interface KPIStripProps {
   device: any;
@@ -42,49 +43,49 @@ export function KPIStrip({ device }: KPIStripProps) {
   };
 
   return (
-    <div className="flex flex-col gap-4 mb-6">
+    <div className="flex flex-col gap-3 mb-4">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="text-slate-400 font-medium tracking-wide">Selected Device:</span>
           <span className="px-4 py-1.5 bg-theme-base/10 border border-theme-base/20 rounded-sm text-white font-bold tracking-wider shadow-[0_0_15px_rgba(var(--theme-rgb-base),0.1)] flex items-center gap-2">
             {device.device_type.toLowerCase().includes('pump') && <Droplets className="w-4 h-4 text-blue-400 opacity-80" />}
             {device.device_type.toLowerCase().includes('compressor') && <Wind className="w-4 h-4 text-slate-300 opacity-80" />}
             {device.device_type.toLowerCase().includes('motor') && <Settings className="w-4 h-4 text-amber-500 opacity-80" />}
             {device.device_id}
           </span>
+          <ShareLinkButton deviceName={device.device_id} />
         </div>
         
         {getStatusDisplay(device.status, device.health_score)}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="glass-card p-6 rounded-md animate-fade-up">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Temperature</h3>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="glass-card p-4 rounded-md animate-fade-up">
+          <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Temperature</h3>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-black text-white tracking-tight">
+            <span className="text-3xl font-black text-white tracking-tight">
               {device.temperature ? device.temperature.toFixed(1) : '--'}
             </span>
-            <span className="text-lg text-slate-500 font-medium">°C</span>
+            <span className="text-base text-slate-500 font-medium">°C</span>
           </div>
         </div>
 
-        <div className="glass-card p-6 rounded-md animate-fade-up delay-100">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Vibration</h3>
+        <div className="glass-card p-4 rounded-md animate-fade-up delay-100">
+          <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Vibration</h3>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-black text-white tracking-tight">
+            <span className="text-3xl font-black text-white tracking-tight">
               {device.vibration ? device.vibration.toFixed(1) : '--'}
             </span>
-            <span className="text-lg text-slate-500 font-medium">mm/s</span>
+            <span className="text-base text-slate-500 font-medium">mm/s</span>
           </div>
         </div>
 
-        <div className="glass-card p-6 rounded-md animate-fade-up delay-200">
-          <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Current</h3>
+        <div className="glass-card p-4 rounded-md animate-fade-up delay-200">
+          <h3 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Current</h3>
           <div className="flex items-baseline gap-2">
-            <span className="text-4xl font-black text-white tracking-tight">
+            <span className="text-3xl font-black text-white tracking-tight">
               {device.current ? device.current.toFixed(1) : '--'}
             </span>
-            <span className="text-lg text-slate-500 font-medium">A</span>
+            <span className="text-base text-slate-500 font-medium">A</span>
           </div>
         </div>
       </div>

@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Search, LineChart as LineChartIcon, Droplets, Wind, Settings } from 'lucide-react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import { useSearchParams } from 'react-router-dom';
+import { ShareLinkButton } from '../ShareLinkButton';
 
 const API_BASE = 'https://api.axionsystems.de';
 
@@ -133,7 +134,7 @@ export function HistoricalTrends({ devices = [] }: HistoricalTrendsProps) {
   const yAxisLabel = metric === 'temperature' ? '°C' : metric === 'vibration' ? 'mm/s' : 'A';
 
   return (
-    <div className="p-6 flex-1 min-h-0 flex flex-col">
+    <div id="correlation-dashboard" className="p-6 flex-1 min-h-0 flex flex-col bg-[#09090b]">
       <div className="mb-6 border-b border-[#262626] pb-4 flex justify-between items-end shrink-0">
         <div>
           <h2 className="text-2xl font-bold text-white tracking-tight">Correlation Engine</h2>
@@ -141,6 +142,7 @@ export function HistoricalTrends({ devices = [] }: HistoricalTrendsProps) {
         </div>
         
         <div className="flex items-center gap-4">
+          <ShareLinkButton />
           <div className="flex bg-[#0a0a0a] rounded-md border border-[#404040] p-1">
             {['temperature', 'vibration', 'current'].map(m => (
               <button

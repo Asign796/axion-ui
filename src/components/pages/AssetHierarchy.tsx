@@ -1,4 +1,4 @@
-import { Server, ChevronRight, ChevronDown, MapPin, Search, Wind, Droplets, Settings } from 'lucide-react';
+import { Server, ChevronRight, ChevronDown, MapPin, Search, Wind, Droplets, Settings, ChevronsDown, ChevronsUp } from 'lucide-react';
 import { useState, useMemo, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
@@ -52,6 +52,22 @@ export function AssetHierarchy({ devices }: AssetHierarchyProps) {
     }));
   };
 
+  const handleExpandAll = () => {
+    const allExpanded: Record<string, boolean> = {};
+    Object.keys(grouped).forEach(region => {
+      allExpanded[region] = true;
+    });
+    setExpandedRegions(allExpanded);
+  };
+
+  const handleCollapseAll = () => {
+    const allCollapsed: Record<string, boolean> = {};
+    Object.keys(grouped).forEach(region => {
+      allCollapsed[region] = false;
+    });
+    setExpandedRegions(allCollapsed);
+  };
+
   const getStatusPill = (status: string, isOnline: boolean) => {
     if (!isOnline) {
       return <span className="bg-slate-500/20 text-slate-400 border border-slate-500/30 px-2 py-0.5 rounded text-xs font-bold uppercase tracking-wider">Offline</span>;
@@ -68,9 +84,19 @@ export function AssetHierarchy({ devices }: AssetHierarchyProps) {
   return (
     <div className="p-6 flex-1 min-h-0 flex flex-col">
       <div className="mb-6 border-b border-[#262626] pb-4 flex items-center justify-between">
-        <div>
-          <h2 className="text-2xl font-bold text-white tracking-tight">Global Asset Hierarchy</h2>
-          <p className="text-sm text-slate-400">Deep-dive structural overview of all plant telemetry.</p>
+        <div className="flex items-center gap-6">
+          <div>
+            <h2 className="text-2xl font-bold text-white tracking-tight">Global Asset Hierarchy</h2>
+            <p className="text-sm text-slate-400">Deep-dive structural overview of all plant telemetry.</p>
+          </div>
+          <div className="flex gap-1 bg-slate-800/50 p-1 rounded-md border border-slate-700/50">
+            <button onClick={handleExpandAll} className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 transition-colors" title="Expand All Regions">
+              <ChevronsDown className="w-5 h-5" />
+            </button>
+            <button onClick={handleCollapseAll} className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 transition-colors" title="Collapse All Regions">
+              <ChevronsUp className="w-5 h-5" />
+            </button>
+          </div>
         </div>
         
         <div className="relative w-64">

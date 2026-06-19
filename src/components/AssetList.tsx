@@ -1,6 +1,6 @@
 import { useState, useMemo, useEffect } from 'react';
 import { formatDistanceToNow } from 'date-fns';
-import { Search, ChevronDown, ChevronRight, MapPin } from 'lucide-react';
+import { Search, ChevronDown, ChevronRight, MapPin, ChevronsDown, ChevronsUp } from 'lucide-react';
 
 interface AssetListProps {
   devices: any[];
@@ -54,6 +54,14 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
     });
   };
 
+  const handleExpandAll = () => {
+    setExpandedRegions(new Set(Object.keys(groupedDevices)));
+  };
+
+  const handleCollapseAll = () => {
+    setExpandedRegions(new Set());
+  };
+
   const getStatusColor = (status: string, isOnline: boolean) => {
     if (!isOnline) return 'bg-slate-500';
     if (status === 'critical') return 'bg-red-500';
@@ -70,7 +78,17 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
 
   return (
     <div className="glass-card p-4 rounded-md animate-fade-up delay-300 flex flex-col h-full min-h-[600px]">
-      <h3 className="text-xl font-bold text-white tracking-tight mb-3 px-2">Assets Hierarchy</h3>
+      <div className="flex items-center justify-between mb-3 px-2">
+        <h3 className="text-xl font-bold text-white tracking-tight">Assets Hierarchy</h3>
+        <div className="flex gap-1 bg-slate-800/50 p-1 rounded-md border border-slate-700/50">
+          <button onClick={handleExpandAll} className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 transition-colors" title="Expand All Regions">
+            <ChevronsDown className="w-4 h-4" />
+          </button>
+          <button onClick={handleCollapseAll} className="p-1 rounded text-slate-400 hover:text-white hover:bg-slate-700 transition-colors" title="Collapse All Regions">
+            <ChevronsUp className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
       
       {/* Search Bar */}
       <div className="relative mb-3 px-2">
@@ -145,9 +163,9 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
                     
                     let lastSeenText = '';
                     if (isOnline) {
-                       lastSeenText = `Online - ${timeDiffSeconds < 60 ? Math.floor(timeDiffSeconds) + 's' : Math.floor(timeDiffSeconds/60) + 'm'} ago`;
+                       lastSeenText = timeDiffSeconds < 60 ? Math.floor(timeDiffSeconds) + 's' : Math.floor(timeDiffSeconds/60) + 'm';
                     } else {
-                       lastSeenText = `Offline - ${formatDistanceToNow(lastSeenDate, { addSuffix: true })}`;
+                       lastSeenText = formatDistanceToNow(lastSeenDate).replace('about ', '').replace('less than a minute', '<1m');
                     }
 
                     const statusColor = getStatusColor(device.status, isOnline);
@@ -159,7 +177,7 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
                         onClick={() => onSelectDevice(device.device_id)}
                         className={`w-full text-left p-2.5 rounded-sm border transition-all duration-300 flex items-center gap-3 relative ${
                           isSelected 
-                            ? 'bg-theme-deep/40 border-theme-base/50 shadow-[0_0_15px_rgba(var(--theme-rgb-base),0.15)]' 
+                            ? 'bg-theme-base/10 border-l-4 border-l-theme-base border-y-theme-base/20 border-r-theme-base/20 shadow-[0_0_15px_rgba(var(--theme-rgb-base),0.15)]' 
                             : 'bg-slate-800/20 border-slate-700/30 hover:bg-slate-800/50 hover:border-slate-600/50'
                         }`}
                       >
@@ -175,7 +193,7 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
                           </span>
                         </div>
                         <div className="flex-1 min-w-0 flex items-center justify-between">
-                          <h4 className={`font-semibold text-sm truncate ${isSelected ? 'text-white' : 'text-slate-200'}`}>
+                          <h4 className={`font-semibold text-sm truncate pr-2 ${isSelected ? 'text-white' : 'text-slate-200'}`} title={device.device_id}>
                             {device.device_id}
                           </h4>
                           <p className={`text-[10px] font-medium shrink-0 ml-2 ${isOnline ? 'text-theme-light' : 'text-slate-500'}`}>

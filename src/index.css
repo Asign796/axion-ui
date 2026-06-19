@@ -322,3 +322,22 @@ input, select, textarea {
   -webkit-backdrop-filter: none !important;
   background-color: rgba(10, 10, 10, 0.98) !important;
 }
+
+/* Leaflet dark theme overrides */
+.leaflet-container {
+  background: #09090b !important;
+  font-family: var(--font-sans) !important;
+}
+.custom-leaflet-marker {
+  background: transparent;
+  border: none;
+}
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: transparent !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+}

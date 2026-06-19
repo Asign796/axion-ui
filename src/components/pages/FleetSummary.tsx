@@ -1,5 +1,6 @@
-import { Activity, AlertTriangle, Building, ArrowRight } from 'lucide-react';
+import { Activity, AlertTriangle, Building, ArrowRight, Map } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { MapWidget } from '../MapWidget';
 
 interface FleetSummaryProps {
   regionSummary: any[];
@@ -49,8 +50,18 @@ export function FleetSummary({ regionSummary }: FleetSummaryProps) {
         </div>
       </div>
 
+      {/* Global Interactive Map */}
+      <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <Map className="w-5 h-5 text-theme-base" /> Global Operations Map
+      </h3>
+      <div className="mb-8 animate-fade-up delay-300">
+        <MapWidget regionSummary={regionSummary} />
+      </div>
+
       {/* Region Cards */}
-      <h3 className="text-lg font-bold text-white mb-4">Plant Operations</h3>
+      <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+        <Building className="w-5 h-5 text-theme-base" /> Plant Operations
+      </h3>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {regionSummary.map((region, index) => {
           const delayClass = `delay-${Math.min((index + 3) * 100, 800)}`; // Stagger animations after KPIs

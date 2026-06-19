@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from 'recharts';
 import { formatAppDate } from '../utils/date';
 
@@ -6,11 +5,12 @@ interface LiveTrendProps {
   data: any[];
   timeRange: number;
   onTimeRangeChange: (hours: number) => void;
+  metric: 'temperature' | 'vibration' | 'current';
+  onMetricChange: (metric: 'temperature' | 'vibration' | 'current') => void;
   timezone: string;
 }
 
-export function LiveTrend({ data, timeRange, onTimeRangeChange, timezone }: LiveTrendProps) {
-  const [metric, setMetric] = useState<'temperature' | 'vibration' | 'current'>('temperature');
+export function LiveTrend({ data, timeRange, onTimeRangeChange, metric, onMetricChange, timezone }: LiveTrendProps) {
 
   const formatTime = (timeStr: any) => {
     return formatAppDate(timeStr, timezone, true);
@@ -40,7 +40,7 @@ export function LiveTrend({ data, timeRange, onTimeRangeChange, timezone }: Live
             {(['temperature', 'vibration', 'current'] as const).map(m => (
               <button
                 key={m}
-                onClick={() => setMetric(m)}
+                onClick={() => onMetricChange(m)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold capitalize transition-all ${
                   metric === m ? 'bg-slate-700 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
