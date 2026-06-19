@@ -42,6 +42,11 @@ function App() {
 
   // Dynamically update document.title based on route
   useEffect(() => {
+    if (!isLoggedIn) {
+      document.title = 'Axion | Login';
+      return;
+    }
+
     const path = location.pathname;
     if (path.startsWith('/device/')) {
       const parts = path.split('/');
@@ -68,7 +73,7 @@ function App() {
     } else {
       document.title = 'Axion Intelligence Platform';
     }
-  }, [location]);
+  }, [location, isLoggedIn]);
 
   const fetchDashboardData = async () => {
     if (!isLoggedIn) return;
