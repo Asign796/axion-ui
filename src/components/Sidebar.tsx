@@ -44,6 +44,15 @@ export function Sidebar({ currentView, onViewChange }: SidebarProps) {
         })}
       </div>
 
+      {/* Branding */}
+      <div className="p-4 border-t border-[#262626] flex flex-col items-center justify-center gap-3">
+        <span className="text-[10px] text-slate-500 uppercase tracking-widest font-medium hidden lg:block">Developed by</span>
+        <img src="/devopsinsiders-logo-light.png" alt="DevOps Insiders" className="h-5 object-contain opacity-70 hover:opacity-100 transition-opacity hidden lg:block" />
+        {/* Mobile mini version */}
+        <div className="lg:hidden w-8 h-8 rounded bg-[#171717] border border-[#262626] flex items-center justify-center">
+          <span className="text-xs font-bold text-slate-400">DI</span>
+        </div>
+      </div>
     </div>
   );
 }
