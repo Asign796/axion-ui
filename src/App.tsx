@@ -13,6 +13,7 @@ import { HistoricalTrends } from './components/pages/HistoricalTrends';
 import { SystemTopology } from './components/pages/SystemTopology';
 import { SystemSettings } from './components/pages/SystemSettings';
 import { DashboardView } from './components/pages/DashboardView';
+import { NotFound } from './components/pages/NotFound';
 
 const API_BASE = 'https://api.axionsystems.de';
 
@@ -131,94 +132,108 @@ function App() {
     }
   }, [isLoggedIn, refreshInterval]);
 
-  if (!isLoggedIn) {
-    return <Login onLogin={handleLogin} />;
-  }
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-slate-300 font-sans flex relative overflow-hidden noise-bg">
-      {/* Giant Watermark */}
-      <div className="fixed top-1/2 left-0 -translate-y-1/2 select-none pointer-events-none opacity-[0.02] z-0">
-        <h1 className="text-[25rem] font-black whitespace-nowrap tracking-tighter">AXION</h1>
-      </div>
+    <Routes>
+      {/* Login route — only accessible when NOT logged in */}
+      <Route path="/login" element={
+        isLoggedIn ? <Navigate to="/fleet" replace /> : <Login onLogin={handleLogin} />
+      } />
 
-      {/* Ambient Premium Glows */}
-      <div className="fixed top-[-20%] left-[-10%] w-[60%] h-[60%] bg-theme-deep/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
-      <div className="fixed bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-theme-deep/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
+      {/* All protected routes share the dashboard shell */}
+      <Route path="*" element={
+        !isLoggedIn ? (
+          <Navigate to="/login" replace />
+        ) : (
+          <div className="min-h-screen bg-[#09090b] text-slate-300 font-sans flex relative overflow-hidden noise-bg">
+            {/* Giant Watermark */}
+            <div className="fixed top-1/2 left-0 -translate-y-1/2 select-none pointer-events-none opacity-[0.02] z-0">
+              <h1 className="text-[25rem] font-black whitespace-nowrap tracking-tighter">AXION</h1>
+            </div>
 
-      {/* Abstract Data Rings */}
-      <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] border border-theme-base/10 rounded-full animate-[spin_120s_linear_infinite] pointer-events-none z-0 opacity-40"></div>
-      <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border-2 border-dashed border-theme-base/10 rounded-full animate-[spin_90s_linear_infinite_reverse] pointer-events-none z-0 opacity-40"></div>
-      
-      {/* Subtle Dot Grid Background */}
-      <div className="fixed inset-0 opacity-[0.03] z-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, white 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
+            {/* Ambient Premium Glows */}
+            <div className="fixed top-[-20%] left-[-10%] w-[60%] h-[60%] bg-theme-deep/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
+            <div className="fixed bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-theme-deep/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
 
-      <div className="z-10 flex w-full relative">
-        <Sidebar />
-        
-        <div className="flex-1 lg:ml-64 ml-16 min-w-0 flex flex-col h-screen overflow-hidden">
-          <TopBar onlineAssets={summary.onlineAssets} lastUpdate={formatAppDate(summary.lastUpdateRaw, timezone)} onLogout={handleLogout} />
-          
-          <Routes>
-            <Route path="/" element={<Navigate to="/fleet" replace />} />
+            {/* Abstract Data Rings */}
+            <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] border border-theme-base/10 rounded-full animate-[spin_120s_linear_infinite] pointer-events-none z-0 opacity-40"></div>
+            <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border-2 border-dashed border-theme-base/10 rounded-full animate-[spin_90s_linear_infinite_reverse] pointer-events-none z-0 opacity-40"></div>
             
-            <Route path="/fleet" element={
-              <FleetSummary regionSummary={regionSummary} />
-            } />
-            
-            <Route path="/device/:region/:deviceId" element={
-              <DashboardView 
-                devices={devices} 
-                throughput={throughput} 
-                isLoggedIn={isLoggedIn} 
-                refreshInterval={refreshInterval} 
-                timezone={timezone} 
-              />
-            } />
-            
-            <Route path="/device/:region" element={
-              <DashboardView 
-                devices={devices} 
-                throughput={throughput} 
-                isLoggedIn={isLoggedIn} 
-                refreshInterval={refreshInterval} 
-                timezone={timezone} 
-              />
-            } />
-            
-            <Route path="/device" element={
-              <DashboardView 
-                devices={devices} 
-                throughput={throughput} 
-                isLoggedIn={isLoggedIn} 
-                refreshInterval={refreshInterval} 
-                timezone={timezone} 
-              />
-            } />
-            
-            <Route path="/hierarchy" element={<AssetHierarchy devices={devices} />} />
-            <Route path="/topology" element={<SystemTopology devices={devices} />} />
-            <Route path="/alarms" element={<AlarmsEvents devices={topAnomalous} timezone={timezone} />} />
-            <Route path="/correlation" element={<HistoricalTrends devices={devices} />} />
-            
-            <Route path="/settings" element={
-              <SystemSettings 
-                refreshInterval={refreshInterval} 
-                onRefreshIntervalChange={setRefreshInterval}
-                theme={theme}
-                onThemeChange={setTheme}
-                density={density}
-                onDensityChange={setDensity}
-                animation={animation}
-                onAnimationChange={setAnimation}
-                timezone={timezone}
-                onTimezoneChange={setTimezone}
-              />
-            } />
-          </Routes>
-        </div>
-      </div>
-    </div>
+            {/* Subtle Dot Grid Background */}
+            <div className="fixed inset-0 opacity-[0.03] z-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, white 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
+
+            <div className="z-10 flex w-full relative">
+              <Sidebar />
+              
+              <div className="flex-1 lg:ml-64 ml-16 min-w-0 flex flex-col h-screen overflow-hidden">
+                <TopBar onlineAssets={summary.onlineAssets} lastUpdate={formatAppDate(summary.lastUpdateRaw, timezone)} onLogout={handleLogout} />
+                
+                <Routes>
+                  <Route path="/" element={<Navigate to="/fleet" replace />} />
+                  
+                  <Route path="/fleet" element={
+                    <FleetSummary regionSummary={regionSummary} />
+                  } />
+                  
+                  <Route path="/device/:region/:deviceId" element={
+                    <DashboardView 
+                      devices={devices} 
+                      throughput={throughput} 
+                      isLoggedIn={isLoggedIn} 
+                      refreshInterval={refreshInterval} 
+                      timezone={timezone} 
+                    />
+                  } />
+                  
+                  <Route path="/device/:region" element={
+                    <DashboardView 
+                      devices={devices} 
+                      throughput={throughput} 
+                      isLoggedIn={isLoggedIn} 
+                      refreshInterval={refreshInterval} 
+                      timezone={timezone} 
+                    />
+                  } />
+                  
+                  <Route path="/device" element={
+                    <DashboardView 
+                      devices={devices} 
+                      throughput={throughput} 
+                      isLoggedIn={isLoggedIn} 
+                      refreshInterval={refreshInterval} 
+                      timezone={timezone} 
+                    />
+                  } />
+                  
+                  <Route path="/hierarchy" element={<AssetHierarchy devices={devices} />} />
+                  <Route path="/topology" element={<SystemTopology devices={devices} />} />
+                  <Route path="/alarms" element={<AlarmsEvents devices={topAnomalous} timezone={timezone} />} />
+                  <Route path="/correlation" element={<HistoricalTrends devices={devices} />} />
+                  
+                  <Route path="/settings" element={
+                    <SystemSettings 
+                      refreshInterval={refreshInterval} 
+                      onRefreshIntervalChange={setRefreshInterval}
+                      theme={theme}
+                      onThemeChange={setTheme}
+                      density={density}
+                      onDensityChange={setDensity}
+                      animation={animation}
+                      onAnimationChange={setAnimation}
+                      timezone={timezone}
+                      onTimezoneChange={setTimezone}
+                    />
+                  } />
+
+                  {/* 404 catch-all */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </div>
+            </div>
+          </div>
+        )
+      } />
+    </Routes>
   );
 }
 
