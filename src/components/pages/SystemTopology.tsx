@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { Server, MapPin, Wind, Droplets, Settings } from 'lucide-react';
+import { Server, MapPin, Wind, Droplets, Settings, ZoomIn, ZoomOut, Maximize } from 'lucide-react';
 
 interface SystemTopologyProps {
   devices: any[];
@@ -46,8 +46,37 @@ export function SystemTopology({ devices }: SystemTopologyProps) {
   }, [devices]);
 
   // State to hold dragging offsets
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
   const [dragOffsets, setDragOffsets] = useState<Record<string, { dx: number, dy: number }>>({});
+  
   const [dragState, setDragState] = useState<{ id: string, startX: number, startY: number, initialDx: number, initialDy: number } | null>(null);
+  const [panState, setPanState] = useState<{ startX: number, startY: number, initialPanX: number, initialPanY: number } | null>(null);
+
+  const handleContainerMouseDown = (e: React.MouseEvent) => {
+    setPanState({
+      startX: e.clientX,
+      startY: e.clientY,
+      initialPanX: pan.x,
+      initialPanY: pan.y
+    });
+  };
+
+  const handleWheel = (e: React.WheelEvent) => {
+    // Zoom toward mouse
+    const zoomFactor = e.deltaY < 0 ? 1.05 : 0.95;
+    const newZoom = Math.max(0.4, Math.min(zoom * zoomFactor, 2.5));
+    
+    const rect = e.currentTarget.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+
+    setPan(prev => ({
+      x: mouseX - ((mouseX - prev.x) / zoom) * newZoom,
+      y: mouseY - ((mouseY - prev.y) / zoom) * newZoom,
+    }));
+    setZoom(newZoom);
+  };
 
   const handleMouseDown = (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
@@ -63,14 +92,20 @@ export function SystemTopology({ devices }: SystemTopologyProps) {
   };
 
   const handleMouseMove = (e: React.MouseEvent) => {
-    if (!dragState) return;
-    const dx = dragState.initialDx + (e.clientX - dragState.startX);
-    const dy = dragState.initialDy + (e.clientY - dragState.startY);
-    setDragOffsets(prev => ({ ...prev, [dragState.id]: { dx, dy } }));
+    if (dragState) {
+      const dx = dragState.initialDx + ((e.clientX - dragState.startX) / zoom);
+      const dy = dragState.initialDy + ((e.clientY - dragState.startY) / zoom);
+      setDragOffsets(prev => ({ ...prev, [dragState.id]: { dx, dy } }));
+    } else if (panState) {
+      const dx = e.clientX - panState.startX;
+      const dy = e.clientY - panState.startY;
+      setPan({ x: panState.initialPanX + dx, y: panState.initialPanY + dy });
+    }
   };
 
   const handleMouseUp = () => {
     setDragState(null);
+    setPanState(null);
   };
 
   // Helper to get actual position
@@ -131,8 +166,22 @@ export function SystemTopology({ devices }: SystemTopologyProps) {
       >
         <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, white 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
 
-        <div className="w-full h-full overflow-auto custom-scrollbar relative">
-          <svg width="1500" height={Math.max(svgHeight, 1000)} className="min-w-[1200px]">
+        {/* Zoom Controls */}
+        <div className="absolute bottom-6 right-6 flex flex-col bg-theme-deep/80 backdrop-blur-md border border-theme-base/30 rounded-lg shadow-xl z-50 overflow-hidden">
+          <button onClick={() => setZoom(z => Math.min(z + 0.15, 2.5))} className="p-2.5 hover:bg-theme-base/20 transition-colors border-b border-theme-base/20" title="Zoom In">
+            <ZoomIn className="w-5 h-5 text-theme-base" />
+          </button>
+          <button onClick={() => { setZoom(1); setPan({x:0, y:0}); setDragOffsets({}); }} className="p-2 hover:bg-theme-base/20 transition-colors border-b border-theme-base/20 text-xs font-bold text-theme-base" title="Reset Layout">
+            {Math.round(zoom * 100)}%
+          </button>
+          <button onClick={() => setZoom(z => Math.max(z - 0.15, 0.4))} className="p-2.5 hover:bg-theme-base/20 transition-colors" title="Zoom Out">
+            <ZoomOut className="w-5 h-5 text-theme-base" />
+          </button>
+        </div>
+
+        <div className="w-full h-full overflow-hidden relative" onWheel={handleWheel} onMouseDown={handleContainerMouseDown}>
+          <svg width="100%" height="100%" className="min-w-full min-h-full" style={{ cursor: panState ? 'grabbing' : 'grab' }}>
+            <g style={{ transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`, transformOrigin: '0 0', transition: (dragState || panState) ? 'none' : 'transform 0.1s ease-out' }}>
             <defs>
               <linearGradient id="flowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
                 <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.2" />
@@ -142,14 +191,22 @@ export function SystemTopology({ devices }: SystemTopologyProps) {
 
             {/* Links: Enterprise -> Regions */}
             {regionsLive.map((region, i) => (
-              <path
-                key={`ent-link-${i}`}
-                d={`M ${entPos.x + 80} ${entPos.y} C ${entPos.x + 200} ${entPos.y}, ${region.x - 150} ${region.y}, ${region.x - 60} ${region.y}`}
-                fill="none"
-                stroke="url(#flowGradient)"
-                strokeWidth="2"
-                className="opacity-50 transition-all duration-75"
-              />
+              <g key={`ent-link-group-${i}`}>
+                <path
+                  id={`ent-link-${i}`}
+                  d={`M ${entPos.x + 80} ${entPos.y} C ${entPos.x + 200} ${entPos.y}, ${region.x - 150} ${region.y}, ${region.x - 60} ${region.y}`}
+                  fill="none"
+                  stroke="url(#flowGradient)"
+                  strokeWidth="2"
+                  className="opacity-50 transition-all duration-75"
+                  style={{ animation: `fadeIn 0.5s ease-out ${i * 0.15}s both` }}
+                />
+                <polygon points="-6,-6 6,0 -6,6" fill="#8b5cf6" className="opacity-80 drop-shadow-[0_0_8px_rgba(139,92,246,0.8)]">
+                  <animateMotion dur={`${3 + (i % 2)}s`} repeatCount="indefinite" rotate="auto">
+                    <mpath href={`#ent-link-${i}`} />
+                  </animateMotion>
+                </polygon>
+              </g>
             ))}
 
             {/* Links: Regions -> Devices */}
@@ -157,15 +214,25 @@ export function SystemTopology({ devices }: SystemTopologyProps) {
               const isOffline = !node.device.last_seen || ((new Date().getTime() - new Date(node.device.last_seen.endsWith('Z') ? node.device.last_seen : `${node.device.last_seen}Z`).getTime()) / 1000 >= 120);
 
               return (
-                <path
-                  key={`dev-link-${i}`}
-                  d={`M ${node.regionX + 80} ${node.regionY} C ${node.regionX + 200} ${node.regionY}, ${node.x - 200} ${node.y}, ${node.x - 120} ${node.y}`}
-                  fill="none"
-                  stroke={isOffline ? '#334155' : '#10b981'}
-                  strokeWidth={isOffline ? "1" : "2"}
-                  strokeDasharray="5,5"
-                  className={`${isOffline ? "opacity-30" : "animate-[dash_20s_linear_infinite] opacity-60"} transition-all duration-75`}
-                />
+                <g key={`dev-link-group-${i}`}>
+                  <path
+                    id={`dev-link-${i}`}
+                    d={`M ${node.regionX + 80} ${node.regionY} C ${node.regionX + 200} ${node.regionY}, ${node.x - 200} ${node.y}, ${node.x - 120} ${node.y}`}
+                    fill="none"
+                    stroke={isOffline ? '#334155' : '#10b981'}
+                    strokeWidth={isOffline ? "1" : "2"}
+                    strokeDasharray={isOffline ? "5,5" : "none"}
+                    className="opacity-60 transition-all duration-75"
+                    style={{ animation: `fadeIn 0.5s ease-out ${(regionsLive.length * 0.15) + (i * 0.04)}s both` }}
+                  />
+                  {!isOffline && (
+                    <polygon points="-4,-4 4,0 -4,4" fill="#10b981" className="drop-shadow-[0_0_8px_rgba(16,185,129,0.8)]">
+                      <animateMotion dur={`${2 + (i % 2)}s`} repeatCount="indefinite" rotate="auto">
+                        <mpath href={`#dev-link-${i}`} />
+                      </animateMotion>
+                    </polygon>
+                  )}
+                </g>
               )
             })}
 
@@ -173,6 +240,7 @@ export function SystemTopology({ devices }: SystemTopologyProps) {
             <foreignObject x={entPos.x - 80} y={entPos.y - 40} width="160" height="80" className="overflow-visible">
               <div
                 onMouseDown={(e) => handleMouseDown(e, defaultEnterprise.id)}
+                style={{ animation: `fadeSlideIn 0.5s ease-out both` }}
                 className={`bg-theme-deep/80 backdrop-blur-md border border-theme-base shadow-[0_0_20px_rgba(var(--theme-rgb-base),0.3)] rounded-lg p-3 text-center flex flex-col items-center justify-center cursor-grab active:cursor-grabbing animate-pulse-slow`}
               >
                 <Server className="w-6 h-6 text-theme-base mb-1 pointer-events-none" />
@@ -185,6 +253,7 @@ export function SystemTopology({ devices }: SystemTopologyProps) {
               <foreignObject key={`region-${i}`} x={region.x - 60} y={region.y - 30} width="160" height="60" className="overflow-visible">
                 <div
                   onMouseDown={(e) => handleMouseDown(e, region.id)}
+                  style={{ animation: `fadeSlideIn 0.5s ease-out ${i * 0.15}s both` }}
                   className="bg-slate-900/80 backdrop-blur-md border border-slate-700 hover:border-theme-base/50 transition-colors shadow-lg rounded-lg p-2 flex items-center gap-3 w-max pr-4 cursor-grab active:cursor-grabbing"
                 >
                   <div className="bg-slate-800 p-2 rounded-md pointer-events-none">
@@ -208,6 +277,7 @@ export function SystemTopology({ devices }: SystemTopologyProps) {
                 <foreignObject key={`device-${i}`} x={node.x - 120} y={node.y - 20} width="280" height="40" className="overflow-visible">
                   <div
                     onMouseDown={(e) => handleMouseDown(e, node.id)}
+                    style={{ animation: `fadeSlideIn 0.5s ease-out ${(regionsLive.length * 0.15) + (i * 0.04)}s both` }}
                     className={`group flex items-center gap-3 bg-[#0a0a0a] border border-slate-800 hover:border-slate-500 transition-colors rounded-full px-1 py-1 w-max shadow-md relative cursor-grab active:cursor-grabbing ${!isOffline ? 'bg-gradient-to-r from-slate-900 to-transparent' : ''}`}
                   >
                     <div className="relative flex items-center justify-center w-8 h-8 shrink-0 pointer-events-none">
@@ -243,14 +313,21 @@ export function SystemTopology({ devices }: SystemTopologyProps) {
                 </foreignObject>
               )
             })}
+            </g>
           </svg>
 
           <style dangerouslySetInnerHTML={{
             __html: `
             @keyframes dash {
-              to {
-                stroke-dashoffset: -100;
-              }
+              to { stroke-dashoffset: -100; }
+            }
+            @keyframes fadeSlideIn {
+              from { opacity: 0; transform: translateX(-30px); }
+              to { opacity: 1; transform: translateX(0); }
+            }
+            @keyframes fadeIn {
+              from { opacity: 0; }
+              to { opacity: 1; }
             }
           `}} />
         </div>

@@ -4,7 +4,6 @@ import { AssetList } from '../AssetList';
 import { KPIStrip } from '../KPIStrip';
 import { LiveTrend } from '../LiveTrend';
 import { Throughput } from '../Throughput';
-import { AlertsPanel } from '../AlertsPanel';
 import { DigitalTwin } from '../DigitalTwin';
 import { ThermalCamera } from '../ThermalCamera';
 
@@ -25,13 +24,11 @@ export function DashboardView({ devices, throughput, topAnomalous, isLoggedIn, r
 
   const [searchParams, setSearchParams] = useSearchParams();
   const initialTimeRange = parseInt(searchParams.get('hours') || '1');
-  const initialVisualizer = (searchParams.get('view') as '3D' | 'CCTV') || '3D';
   const initialMetric = (searchParams.get('metric') as 'temperature' | 'vibration' | 'current') || 'temperature';
 
   const [latestData, setLatestData] = useState<any>(null);
   const [trendData, setTrendData] = useState<any[]>([]);
   const [timeRange, setTimeRange] = useState<number>(initialTimeRange);
-  const [activeVisualizer, setActiveVisualizer] = useState<'3D' | 'CCTV'>(initialVisualizer);
   const [metric, setMetric] = useState<'temperature' | 'vibration' | 'current'>(initialMetric);
 
   const updateUrlParam = (key: string, value: string) => {
@@ -45,11 +42,6 @@ export function DashboardView({ devices, throughput, topAnomalous, isLoggedIn, r
     updateUrlParam('hours', newHours.toString());
   };
 
-  const handleVisualizerChange = (newView: '3D' | 'CCTV') => {
-    setActiveVisualizer(newView);
-    updateUrlParam('view', newView);
-  };
-
   const handleMetricChange = (newMetric: 'temperature' | 'vibration' | 'current') => {
     setMetric(newMetric);
     updateUrlParam('metric', newMetric);
@@ -58,17 +50,15 @@ export function DashboardView({ devices, throughput, topAnomalous, isLoggedIn, r
   useEffect(() => {
     // Ensure default parameters are always present in the URL for sharing
     const currentHours = searchParams.get('hours');
-    const currentView = searchParams.get('view');
     const currentMetric = searchParams.get('metric');
     
-    if (!currentHours || !currentView || !currentMetric) {
+    if (!currentHours || !currentMetric) {
       const newParams = new URLSearchParams(searchParams);
       if (!currentHours) newParams.set('hours', initialTimeRange.toString());
-      if (!currentView) newParams.set('view', initialVisualizer);
       if (!currentMetric) newParams.set('metric', initialMetric);
       setSearchParams(newParams, { replace: true });
     }
-  }, [deviceId, searchParams, initialTimeRange, initialVisualizer, initialMetric, setSearchParams]);
+  }, [deviceId, searchParams, initialTimeRange, initialMetric, setSearchParams]);
 
   const fetchSelectedDeviceData = async (id: string) => {
     if (!isLoggedIn) return;
@@ -129,32 +119,18 @@ export function DashboardView({ devices, throughput, topAnomalous, isLoggedIn, r
           <div id="main-dashboard-content" className="flex flex-col gap-4 bg-[#09090b] rounded-md p-1">
             <KPIStrip device={latestData} />
             
-            {/* Top Row: Visualizer (Tabbed) and Live Trend */}
+            {/* Top Row: Digital Twin and Thermal CCTV */}
             <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
               <div className="h-[400px] flex flex-col relative rounded-md overflow-hidden bg-black border border-[#262626]">
-                
-                {/* Visualizer Tabs */}
-                <div className="absolute top-4 right-4 z-30 flex gap-1 bg-black/80 p-1 rounded-md backdrop-blur-md border border-[#404040]">
-                  <button 
-                    onClick={() => handleVisualizerChange('3D')}
-                    className={`px-3 py-1.5 rounded text-[10px] uppercase font-bold tracking-wider transition-colors ${activeVisualizer === '3D' ? 'bg-theme-base text-white' : 'text-slate-400 hover:text-white'}`}
-                  >
-                    3D Model
-                  </button>
-                  <button 
-                    onClick={() => handleVisualizerChange('CCTV')}
-                    className={`px-3 py-1.5 rounded text-[10px] uppercase font-bold tracking-wider transition-colors ${activeVisualizer === 'CCTV' ? 'bg-red-600 text-white animate-pulse' : 'text-slate-400 hover:text-white'}`}
-                  >
-                    Thermal CCTV
-                  </button>
-                </div>
-
-                {activeVisualizer === '3D' ? (
-                  <DigitalTwin deviceId={deviceId} deviceType={latestData.device_type} temperature={latestData.temperature} status={latestData.status} />
-                ) : (
-                  <ThermalCamera deviceId={deviceId} deviceType={latestData.device_type} temperature={latestData.temperature} status={latestData.status} />
-                )}
+                <DigitalTwin deviceId={deviceId} deviceType={latestData.device_type} temperature={latestData.temperature} status={latestData.status} />
               </div>
+              <div className="h-[400px] flex flex-col relative rounded-md overflow-hidden bg-black border border-[#262626]">
+                <ThermalCamera deviceId={deviceId} deviceType={latestData.device_type} temperature={latestData.temperature} status={latestData.status} />
+              </div>
+            </div>
+
+            {/* Bottom Row: Live Trend and Throughput */}
+            <div className="grid grid-cols-1 xl:grid-cols-[1fr_400px] gap-4">
               <div className="h-[400px] flex flex-col">
                 <LiveTrend 
                   data={trendData} 
@@ -165,15 +141,31 @@ export function DashboardView({ devices, throughput, topAnomalous, isLoggedIn, r
                   timezone={timezone}
                 />
               </div>
+              <Throughput data={throughput} />
             </div>
 
-            {/* Bottom Row: Alerts and Throughput */}
-            <div className="grid grid-cols-1 xl:grid-cols-[1fr_400px] gap-4">
-              <AlertsPanel 
-                devices={topAnomalous} 
-                onSelectDevice={handleSelectDevice} 
-              />
-              <Throughput data={throughput} />
+            {/* Device Information Footer */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-6 py-4 mt-2 bg-[#0a0a0a] border border-[#262626] rounded-md shadow-inner">
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase tracking-wider text-slate-500">Device Type</span>
+                <span className="text-xs font-medium text-slate-300">{latestData.device_type}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase tracking-wider text-slate-500">Region</span>
+                <span className="text-xs font-medium text-slate-300">{latestData.refinery_region}</span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase tracking-wider text-slate-500">First Seen</span>
+                <span className="text-xs font-medium text-slate-300">
+                  {latestData.first_seen ? new Date(latestData.first_seen.endsWith('Z') ? latestData.first_seen : `${latestData.first_seen}Z`).toLocaleDateString() : 'N/A'}
+                </span>
+              </div>
+              <div className="flex flex-col">
+                <span className="text-[10px] uppercase tracking-wider text-slate-500">Total Records</span>
+                <span className="text-xs font-medium text-slate-300">
+                  {latestData.total_records ? latestData.total_records.toLocaleString() : 'N/A'}
+                </span>
+              </div>
             </div>
           </div>
         </div>

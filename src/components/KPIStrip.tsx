@@ -89,30 +89,6 @@ export function KPIStrip({ device }: KPIStripProps) {
           </div>
         </div>
       </div>
-      
-      {/* Device Information Panel */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 px-2">
-        <div className="flex flex-col">
-          <span className="text-[10px] uppercase tracking-wider text-slate-500">Device Type</span>
-          <span className="text-xs font-medium text-slate-300">{device.device_type}</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] uppercase tracking-wider text-slate-500">Region</span>
-          <span className="text-xs font-medium text-slate-300">{device.refinery_region}</span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] uppercase tracking-wider text-slate-500">First Seen</span>
-          <span className="text-xs font-medium text-slate-300">
-            {device.first_seen ? new Date(device.first_seen.endsWith('Z') ? device.first_seen : `${device.first_seen}Z`).toLocaleDateString() : 'N/A'}
-          </span>
-        </div>
-        <div className="flex flex-col">
-          <span className="text-[10px] uppercase tracking-wider text-slate-500">Total Records</span>
-          <span className="text-xs font-medium text-slate-300">
-            {device.total_records ? device.total_records.toLocaleString() : 'N/A'}
-          </span>
-        </div>
-      </div>
     </div>
   );
 }
