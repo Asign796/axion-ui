@@ -42,19 +42,20 @@ export function AssetHierarchy({ devices, onSelectDevice }: AssetHierarchyProps)
         <p className="text-sm text-slate-400">Manage your plant, area, and equipment structure.</p>
       </div>
       
-      <div className="flex-1 bg-[#171717] border border-[#262626] rounded-md p-6 overflow-auto custom-scrollbar">
-        <div className="flex items-center gap-2 text-slate-300 font-medium mb-4 p-2 bg-[#0a0a0a] rounded border border-[#404040] w-fit pr-6">
+      <div className="flex-1 glass-card rounded-md p-6 overflow-auto custom-scrollbar animate-fade-up">
+        <div className="flex items-center gap-2 text-slate-300 font-medium mb-4 p-2 bg-[#0a0a0a]/80 backdrop-blur-sm rounded border border-[#404040] w-fit pr-6">
           <Server className="w-5 h-5 text-blue-500" />
           <span>Enterprise: Axion Global</span>
         </div>
         
         <div className="pl-6 border-l border-[#404040] ml-3 space-y-4">
-          {Object.entries(grouped).map(([region, regionDevs]) => {
+          {Object.entries(grouped).map(([region, regionDevs], index) => {
             const regionDevices = regionDevs as any[];
             const isExpanded = expandedRegions[region] !== false; // default expanded
+            const delayClass = `delay-${Math.min((index % 10) * 100, 800)}`;
             
             return (
-              <div key={region}>
+              <div key={region} className={`animate-fade-up ${delayClass}`}>
                 <div 
                   onClick={() => toggleRegion(region)}
                   className="flex items-center gap-2 text-slate-300 mb-2 hover:bg-[#262626] p-1.5 rounded cursor-pointer w-fit pr-4 transition-colors select-none"

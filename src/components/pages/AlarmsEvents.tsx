@@ -53,8 +53,8 @@ export function AlarmsEvents({ devices }: AlarmsEventsProps) {
         </button>
       </div>
 
-      <div className="flex-1 bg-[#171717] border border-[#262626] rounded-md overflow-hidden flex flex-col">
-        <div className="grid grid-cols-[100px_100px_120px_150px_1fr] gap-4 bg-[#0a0a0a] border-b border-[#404040] p-4 text-xs font-bold text-slate-400 uppercase tracking-wider">
+      <div className="flex-1 glass-card rounded-md overflow-hidden flex flex-col animate-fade-up">
+        <div className="grid grid-cols-[100px_100px_120px_150px_1fr] gap-4 bg-[#0a0a0a]/80 border-b border-[#404040] p-4 text-xs font-bold text-slate-400 uppercase tracking-wider backdrop-blur-sm">
           <div>ID</div>
           <div>Time</div>
           <div>Level</div>
@@ -66,20 +66,24 @@ export function AlarmsEvents({ devices }: AlarmsEventsProps) {
           {alarms.length === 0 ? (
             <div className="p-8 text-center text-slate-500">No active alarms or events to display.</div>
           ) : (
-            alarms.map((alarm, idx) => (
-            <div key={idx} className="grid grid-cols-[100px_100px_120px_150px_1fr] gap-4 p-4 border-b border-[#262626] hover:bg-[#262626]/50 transition-colors text-sm items-center">
-              <div className="text-slate-500 font-mono">{alarm.id}</div>
-              <div className="text-slate-300">{alarm.time}</div>
-              <div>
-                <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-bold border ${getLevelColor(alarm.level)}`}>
-                  {getLevelIcon(alarm.level)}
-                  {alarm.level}
-                </span>
+            alarms.map((alarm, idx) => {
+              const delayClass = `delay-${Math.min((idx % 10) * 100, 800)}`;
+              return (
+              <div key={idx} className={`grid grid-cols-[100px_100px_120px_150px_1fr] gap-4 p-4 border-b border-[#262626] hover:bg-[#262626]/50 transition-colors text-sm items-center animate-fade-up ${delayClass}`}>
+                <div className="text-slate-500 font-mono">{alarm.id}</div>
+                <div className="text-slate-300">{alarm.time}</div>
+                <div>
+                  <span className={`inline-flex items-center gap-1.5 px-2 py-1 rounded text-xs font-bold border ${getLevelColor(alarm.level)}`}>
+                    {getLevelIcon(alarm.level)}
+                    {alarm.level}
+                  </span>
+                </div>
+                <div className="text-white font-medium">{alarm.device}</div>
+                <div className="text-slate-400">{alarm.message}</div>
               </div>
-              <div className="text-white font-medium">{alarm.device}</div>
-              <div className="text-slate-400">{alarm.message}</div>
-            </div>
-          )))}
+              );
+            })
+          )}
         </div>
       </div>
     </div>

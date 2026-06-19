@@ -20,7 +20,7 @@ export function FleetSummary({ regionSummary, onSelectRegion }: FleetSummaryProp
 
       {/* Global KPIs */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <div className="bg-[#171717] border border-[#262626] rounded-md p-6">
+        <div className="glass-card rounded-md p-6 animate-fade-up">
           <div className="flex items-center gap-3 mb-2">
             <Building className="w-5 h-5 text-blue-500" />
             <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Total Assets</h3>
@@ -28,7 +28,7 @@ export function FleetSummary({ regionSummary, onSelectRegion }: FleetSummaryProp
           <div className="text-4xl font-black text-white">{totalAssets}</div>
         </div>
         
-        <div className="bg-[#171717] border border-[#262626] rounded-md p-6">
+        <div className="glass-card rounded-md p-6 animate-fade-up delay-100">
           <div className="flex items-center gap-3 mb-2">
             <Activity className="w-5 h-5 text-green-500" />
             <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Assets Online</h3>
@@ -36,7 +36,7 @@ export function FleetSummary({ regionSummary, onSelectRegion }: FleetSummaryProp
           <div className="text-4xl font-black text-white">{totalOnline}</div>
         </div>
 
-        <div className="bg-[#171717] border border-[#262626] rounded-md p-6 relative overflow-hidden">
+        <div className="glass-card rounded-md p-6 relative overflow-hidden animate-fade-up delay-200">
           <div className="flex items-center gap-3 mb-2">
             <AlertTriangle className="w-5 h-5 text-red-500" />
             <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Active Alerts</h3>
@@ -51,8 +51,10 @@ export function FleetSummary({ regionSummary, onSelectRegion }: FleetSummaryProp
       {/* Region Cards */}
       <h3 className="text-lg font-bold text-white mb-4">Plant Operations</h3>
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {regionSummary.map((region) => (
-          <div key={region.region} className="bg-[#171717] border border-[#262626] rounded-md flex flex-col hover:border-[#404040] transition-colors group">
+        {regionSummary.map((region, index) => {
+          const delayClass = `delay-${Math.min((index + 3) * 100, 800)}`; // Stagger animations after KPIs
+          return (
+          <div key={region.region} className={`glass-card rounded-md flex flex-col group animate-fade-up ${delayClass}`}>
             <div className="p-5 border-b border-[#262626] flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded bg-[#0a0a0a] border border-[#404040] flex items-center justify-center">
@@ -88,7 +90,8 @@ export function FleetSummary({ regionSummary, onSelectRegion }: FleetSummaryProp
               </div>
             </div>
           </div>
-        ))}
+          );
+        })}
 
         {regionSummary.length === 0 && (
           <div className="col-span-full py-12 text-center text-slate-500 font-medium">

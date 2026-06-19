@@ -45,12 +45,12 @@ export function Sidebar({ currentView, onViewChange }: SidebarProps) {
       </div>
 
       {/* Branding */}
-      <div className="p-4 border-t border-[#262626] flex flex-col items-center justify-center gap-3">
-        <span className="text-[10px] text-slate-500 uppercase tracking-widest font-medium hidden lg:block">Developed by</span>
-        <img src="/devopsinsiders-logo-light.png" alt="DevOps Insiders" className="h-5 object-contain opacity-70 hover:opacity-100 transition-opacity hidden lg:block" />
+      <div className="p-6 mt-auto border-t border-[#262626] flex flex-col items-center justify-center gap-3 bg-[#0a0a0a]">
+        <span className="text-[11px] text-slate-400 uppercase tracking-[0.2em] font-semibold hidden lg:block">Developed By</span>
+        <img src="/devopsinsiders-logo-light.png" alt="DevOps Insiders" className="h-8 object-contain opacity-90 hover:opacity-100 transition-opacity hidden lg:block" />
         {/* Mobile mini version */}
-        <div className="lg:hidden w-8 h-8 rounded bg-[#171717] border border-[#262626] flex items-center justify-center">
-          <span className="text-xs font-bold text-slate-400">DI</span>
+        <div className="lg:hidden w-10 h-10 rounded-lg bg-[#171717] border border-[#333] flex items-center justify-center shadow-lg">
+          <span className="text-sm font-bold text-slate-300">DI</span>
         </div>
       </div>
     </div>
