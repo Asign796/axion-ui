@@ -31,13 +31,24 @@ export function AlertsPanel({ devices, onSelectDevice }: AlertsPanelProps) {
           let Icon = AlertTriangle;
           let colorClass = 'text-red-500';
           
-          if (device.temperature > 100) {
-            reason = `High Temp: ${device.temperature.toFixed(1)}°C`;
-            Icon = Thermometer;
-          } else if (device.vibration > 10) {
-            reason = `High Vibration: ${device.vibration.toFixed(1)} mm/s`;
-            Icon = TrendingUp;
+          if (device.temperature > 100 || device.vibration > 10) {
+            colorClass = 'text-red-500';
+            if (device.temperature > 100) {
+              reason = `Critical Temp: ${device.temperature?.toFixed(1)}°C`;
+              Icon = Thermometer;
+            } else {
+              reason = `Critical Vib: ${device.vibration?.toFixed(1)} mm/s`;
+              Icon = TrendingUp;
+            }
+          } else if (device.temperature > 85 || device.vibration > 6) {
             colorClass = 'text-amber-500';
+            if (device.temperature > 85) {
+              reason = `High Temp: ${device.temperature?.toFixed(1)}°C`;
+              Icon = Thermometer;
+            } else {
+              reason = `High Vib: ${device.vibration?.toFixed(1)} mm/s`;
+              Icon = TrendingUp;
+            }
           } else {
              reason = `Warning State`;
              colorClass = 'text-yellow-500';
