@@ -45,6 +45,23 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
     }
   }, [searchTerm, filterType, groupedDevices]);
 
+  // Auto-expand the region of the currently selected device
+  useEffect(() => {
+    if (selectedDeviceId && devices.length > 0) {
+      const selectedDevice = devices.find(d => d.device_id === selectedDeviceId);
+      if (selectedDevice) {
+        setExpandedRegions(prev => {
+          if (!prev.has(selectedDevice.refinery_region)) {
+            const next = new Set(prev);
+            next.add(selectedDevice.refinery_region);
+            return next;
+          }
+          return prev;
+        });
+      }
+    }
+  }, [selectedDeviceId, devices]);
+
   const toggleRegion = (region: string) => {
     setExpandedRegions(prev => {
       const next = new Set(prev);

@@ -140,6 +140,16 @@ function App() {
               />
             } />
             
+            <Route path="/device/:region" element={
+              <DashboardView 
+                devices={devices} 
+                throughput={throughput} 
+                isLoggedIn={isLoggedIn} 
+                refreshInterval={refreshInterval} 
+                timezone={timezone} 
+              />
+            } />
+            
             <Route path="/device" element={
               <DashboardView 
                 devices={devices} 

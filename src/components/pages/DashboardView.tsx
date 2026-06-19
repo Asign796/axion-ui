@@ -18,7 +18,7 @@ interface DashboardViewProps {
 }
 
 export function DashboardView({ devices, throughput, isLoggedIn, refreshInterval, timezone }: DashboardViewProps) {
-  const { deviceId } = useParams();
+  const { region, deviceId } = useParams();
   const navigate = useNavigate();
 
   const [searchParams, setSearchParams] = useSearchParams();
@@ -86,10 +86,17 @@ export function DashboardView({ devices, throughput, isLoggedIn, refreshInterval
   // Auto-redirect if no deviceId but devices are loaded
   useEffect(() => {
     if (!deviceId && devices.length > 0) {
+      if (region) {
+        const regionDevice = devices.find((d: any) => d.refinery_region === region);
+        if (regionDevice) {
+          navigate(`/device/${regionDevice.refinery_region}/${regionDevice.device_id}`, { replace: true });
+          return;
+        }
+      }
       const first = devices[0];
       navigate(`/device/${first.refinery_region}/${first.device_id}`, { replace: true });
     }
-  }, [deviceId, devices, navigate]);
+  }, [deviceId, region, devices, navigate]);
 
   const handleSelectDevice = (id: string) => {
     const dev = devices.find((d: any) => d.device_id === id);

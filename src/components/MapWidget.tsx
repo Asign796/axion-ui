@@ -105,26 +105,29 @@ export function MapWidget({ regionSummary }: MapWidgetProps) {
               icon={createCustomIcon(isCritical ? 'critical' : 'healthy')}
             >
               <Popup className="custom-popup">
-                <div className="p-1 min-w-[200px]">
-                  <h3 className="font-bold text-lg mb-2 flex items-center gap-2">
-                    <Building className="w-4 h-4" />
-                    {region.region}
+                <div className="p-2 min-w-[220px]">
+                  <h3 className="font-bold text-lg mb-3 flex items-center gap-2 text-white pr-6 border-b border-white/10 pb-2">
+                    <Building className="w-4 h-4 text-[#00AEEF]" />
+                    <span className="tracking-wide">{region.region}</span>
                   </h3>
-                  <div className="grid grid-cols-2 gap-2 mb-3 text-sm">
-                    <div className="bg-slate-100 p-2 rounded">
-                      <div className="text-slate-500 text-xs font-bold uppercase">Online</div>
-                      <div className="text-green-600 font-bold">{region.online_devices}</div>
+                  
+                  <div className="flex justify-between items-center mb-4 px-1">
+                    <div className="flex flex-col">
+                      <span className="text-slate-400 text-[10px] font-bold tracking-wider uppercase mb-1">Online</span>
+                      <span className="text-emerald-400 font-mono text-xl font-bold leading-none">{region.online_devices}</span>
                     </div>
-                    <div className="bg-slate-100 p-2 rounded">
-                      <div className="text-slate-500 text-xs font-bold uppercase">Alerts</div>
-                      <div className={`font-bold ${isCritical ? 'text-red-500' : 'text-slate-700'}`}>
+                    <div className="w-[1px] h-8 bg-white/10"></div>
+                    <div className="flex flex-col text-right">
+                      <span className="text-slate-400 text-[10px] font-bold tracking-wider uppercase mb-1">Alerts</span>
+                      <span className={`font-mono text-xl font-bold leading-none ${isCritical ? 'text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.5)]' : 'text-slate-300'}`}>
                         {region.alert_devices}
-                      </div>
+                      </span>
                     </div>
                   </div>
+
                   <button 
                     onClick={() => navigate('/device')}
-                    className="w-full py-2 bg-[#171717] hover:bg-[#262626] text-white rounded text-sm font-bold transition-colors"
+                    className="w-full py-2.5 bg-gradient-to-r from-[rgba(0,174,239,0.15)] to-[rgba(0,174,239,0.05)] hover:from-[rgba(0,174,239,0.3)] hover:to-[rgba(0,174,239,0.1)] border border-[rgba(0,174,239,0.4)] text-[#00AEEF] rounded-full text-sm font-bold tracking-wide transition-all shadow-[0_0_15px_rgba(0,174,239,0.1)] hover:shadow-[0_0_20px_rgba(0,174,239,0.3)]"
                   >
                     View Devices
                   </button>
@@ -138,8 +141,34 @@ export function MapWidget({ regionSummary }: MapWidgetProps) {
       {/* Custom CSS to hide default leaflet UI and style popups */}
       <style>{`
         .leaflet-container { background: #0a0a0a; }
-        .leaflet-popup-content-wrapper { background: white; color: #171717; border-radius: 8px; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5); }
-        .leaflet-popup-tip { background: white; }
+        .leaflet-popup-content-wrapper { 
+            background: rgba(15, 23, 42, 0.75) !important; 
+            backdrop-filter: blur(16px) !important;
+            -webkit-backdrop-filter: blur(16px) !important;
+            color: #f8fafc !important; 
+            border: 1px solid rgba(255, 255, 255, 0.1) !important; 
+            border-radius: 16px !important; 
+            box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(0, 174, 239, 0.1) inset !important; 
+            padding: 0 !important;
+        }
+        .leaflet-popup-content { margin: 8px !important; }
+        .leaflet-popup-tip-container { margin-top: -1px !important; }
+        .leaflet-popup-tip { 
+            background: rgba(15, 23, 42, 0.9) !important; 
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important; 
+            border-right: 1px solid rgba(255, 255, 255, 0.1) !important; 
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.5) !important;
+        }
+        .leaflet-popup-close-button {
+            color: rgba(255, 255, 255, 0.5) !important;
+            padding: 12px 12px 0 0 !important;
+            font-size: 18px !important;
+            transition: color 0.2s !important;
+        }
+        .leaflet-popup-close-button:hover {
+            color: #fff !important;
+            background: transparent !important;
+        }
         .leaflet-control-attribution { background: rgba(0,0,0,0.5) !important; color: #888 !important; }
         .leaflet-control-attribution a { color: #aaa !important; }
       `}</style>
