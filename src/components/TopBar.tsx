@@ -11,7 +11,10 @@ export function TopBar({ onlineAssets, lastUpdate, onLogout }: TopBarProps) {
   const [showProfile, setShowProfile] = useState(false);
 
   return (
-    <header className="bg-[#171717] border-b border-[#262626] px-6 py-3 mb-6 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-10">
+    <header className="bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-[#262626] px-6 py-3 mb-6 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-40">
+      {/* Top Gradient Accent Line */}
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-600 via-purple-600 to-blue-500 opacity-80"></div>
+
       <div className="flex items-center gap-4">
         <div>
           <h1 className="text-xl font-bold text-white tracking-tight uppercase">AXION INTELLIGENCE PLATFORM</h1>

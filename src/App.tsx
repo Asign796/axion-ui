@@ -198,13 +198,31 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#09090b] text-slate-300 font-sans flex">
-      <Sidebar currentView={currentView} onViewChange={setCurrentView} />
+    <div className="min-h-screen bg-[#09090b] text-slate-300 font-sans flex relative overflow-hidden noise-bg">
+      {/* Giant Watermark */}
+      <div className="fixed top-1/2 left-0 -translate-y-1/2 select-none pointer-events-none opacity-[0.02] z-0">
+        <h1 className="text-[25rem] font-black whitespace-nowrap tracking-tighter">AXION</h1>
+      </div>
+
+      {/* Ambient Premium Glows */}
+      <div className="fixed top-[-20%] left-[-10%] w-[60%] h-[60%] bg-blue-900/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
+      <div className="fixed bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-purple-900/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
+
+      {/* Abstract Data Rings */}
+      <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] border border-blue-500/10 rounded-full animate-[spin_120s_linear_infinite] pointer-events-none z-0 opacity-40"></div>
+      <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border-2 border-dashed border-purple-500/10 rounded-full animate-[spin_90s_linear_infinite_reverse] pointer-events-none z-0 opacity-40"></div>
       
-      <div className="flex-1 lg:ml-64 ml-16 min-w-0 flex flex-col h-screen overflow-hidden">
-        <TopBar onlineAssets={summary.onlineAssets} lastUpdate={summary.lastUpdate} onLogout={handleLogout} />
+      {/* Subtle Dot Grid Background */}
+      <div className="fixed inset-0 opacity-[0.03] z-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, white 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>
+
+      <div className="z-10 flex w-full relative">
+        <Sidebar currentView={currentView} onViewChange={setCurrentView} />
         
-        {renderCurrentView()}
+        <div className="flex-1 lg:ml-64 ml-16 min-w-0 flex flex-col h-screen overflow-hidden">
+          <TopBar onlineAssets={summary.onlineAssets} lastUpdate={summary.lastUpdate} onLogout={handleLogout} />
+          
+          {renderCurrentView()}
+        </div>
       </div>
     </div>
   );

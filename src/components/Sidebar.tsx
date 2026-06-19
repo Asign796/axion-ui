@@ -45,13 +45,36 @@ export function Sidebar({ currentView, onViewChange }: SidebarProps) {
       </div>
 
       {/* Branding */}
-      <div className="p-6 mt-auto border-t border-[#262626] flex flex-col items-center justify-center gap-3 bg-[#0a0a0a]">
-        <span className="text-[11px] text-slate-400 uppercase tracking-[0.2em] font-semibold hidden lg:block">Developed By</span>
-        <img src="/devopsinsiders-logo-light.png" alt="DevOps Insiders" className="h-8 object-contain opacity-90 hover:opacity-100 transition-opacity hidden lg:block" />
-        {/* Mobile mini version */}
-        <div className="lg:hidden w-10 h-10 rounded-lg bg-[#171717] border border-[#333] flex items-center justify-center shadow-lg">
-          <span className="text-sm font-bold text-slate-300">DI</span>
-        </div>
+      <div className="mt-auto p-4">
+        <a 
+          href="https://devopsinsiders.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative flex flex-col items-center justify-center gap-2 p-4 rounded-xl bg-gradient-to-b from-[#121212] to-[#0a0a0a] border border-[#262626] hover:border-[#404040] hover:shadow-[0_0_20px_rgba(255,255,255,0.03)] transition-all duration-500 overflow-hidden"
+        >
+          {/* Subtle background animated shine */}
+          <div className="absolute inset-0 -translate-x-full group-hover:animate-flowPulse bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none"></div>
+
+          <div className="flex items-center gap-2 mb-1">
+            <span className="h-[1px] w-4 bg-gradient-to-r from-transparent to-slate-600 hidden lg:block transition-all group-hover:w-6 group-hover:to-slate-400"></span>
+            <span className="text-[10px] text-slate-500 group-hover:text-slate-300 uppercase tracking-[0.25em] font-medium transition-colors duration-300 hidden lg:block">Developed By</span>
+            <span className="h-[1px] w-4 bg-gradient-to-l from-transparent to-slate-600 hidden lg:block transition-all group-hover:w-6 group-hover:to-slate-400"></span>
+          </div>
+          
+          <div className="relative w-full flex justify-center py-1">
+            <div className="absolute inset-0 bg-white/10 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <img 
+              src="/devopsinsiders-logo-light.png" 
+              alt="DevOps Insiders" 
+              className="h-10 w-auto max-w-[95%] object-contain opacity-75 group-hover:opacity-100 group-hover:scale-[1.03] transition-all duration-500 relative z-10 hidden lg:block drop-shadow-md" 
+            />
+          </div>
+
+          {/* Mobile mini version */}
+          <div className="lg:hidden relative w-10 h-10 rounded-lg bg-gradient-to-br from-[#1a1a1a] to-[#0f0f0f] border border-[#333] group-hover:border-slate-500 flex items-center justify-center shadow-lg transition-all duration-300 group-hover:scale-105 group-hover:shadow-[0_0_15px_rgba(255,255,255,0.1)]">
+            <span className="text-sm font-black text-slate-400 group-hover:text-white drop-shadow-sm">DI</span>
+          </div>
+        </a>
       </div>
     </div>
   );
