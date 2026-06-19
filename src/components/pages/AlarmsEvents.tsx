@@ -1,10 +1,12 @@
 import { AlertTriangle, Bell, Info } from 'lucide-react';
+import { formatAppDate } from '../../utils/date';
 
 interface AlarmsEventsProps {
   devices: any[];
+  timezone: string;
 }
 
-export function AlarmsEvents({ devices }: AlarmsEventsProps) {
+export function AlarmsEvents({ devices, timezone }: AlarmsEventsProps) {
   const alarms = devices.map((d, i) => {
     let level = 'WARNING';
     let msg = 'Warning threshold reached';
@@ -22,7 +24,7 @@ export function AlarmsEvents({ devices }: AlarmsEventsProps) {
 
     return {
       id: `ALM-${(i+1).toString().padStart(3, '0')}`,
-      time: new Date(d.last_seen.endsWith('Z') ? d.last_seen : `${d.last_seen}Z`).toLocaleTimeString(),
+      time: formatAppDate(d.last_seen, timezone),
       level: level,
       device: d.device_id,
       message: msg

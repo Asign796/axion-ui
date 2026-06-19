@@ -8,6 +8,7 @@ import { Regions } from './components/Regions';
 import { AlertsPanel } from './components/AlertsPanel';
 import { Sidebar } from './components/Sidebar';
 import { Login } from './components/Login';
+import { formatAppDate } from './utils/date';
 
 // Import pages
 import { FleetSummary } from './components/pages/FleetSummary';
@@ -26,7 +27,7 @@ function App() {
   const [currentView, setCurrentView] = useState('fleet');
   const [refreshInterval, setRefreshInterval] = useState<number | null>(5000);
 
-  const [summary, setSummary] = useState({ onlineAssets: 0, lastUpdate: '-' });
+  const [summary, setSummary] = useState({ onlineAssets: 0, lastUpdateRaw: '' });
   const [devices, setDevices] = useState<any[]>([]);
   const [selectedDeviceId, setSelectedDeviceId] = useState<string | null>(null);
   const [latestData, setLatestData] = useState<any>(null);
@@ -67,7 +68,7 @@ function App() {
 
       setSummary({
         onlineAssets: sumData.onlineAssets,
-        lastUpdate: sumData.lastUpdate ? new Date(sumData.lastUpdate.endsWith('Z') ? sumData.lastUpdate : `${sumData.lastUpdate}Z`).toLocaleTimeString() : '-'
+        lastUpdateRaw: sumData.lastUpdate || ''
       });
       setDevices(devData);
       setThroughput(thruData);
@@ -96,14 +97,20 @@ function App() {
     }
   };
 
-  const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('axion_theme') || 'blue';
-  });
+  const [theme, setTheme] = useState(() => localStorage.getItem('axion_theme') || 'blue');
+  const [density, setDensity] = useState(() => localStorage.getItem('axion_density') || 'premium');
+  const [animation, setAnimation] = useState(() => localStorage.getItem('axion_animation') || 'cinematic');
+  const [timezone, setTimezone] = useState(() => localStorage.getItem('axion_timezone') || 'local');
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme);
+    document.documentElement.setAttribute('data-density', density);
+    document.documentElement.setAttribute('data-animation', animation);
     localStorage.setItem('axion_theme', theme);
-  }, [theme]);
+    localStorage.setItem('axion_density', density);
+    localStorage.setItem('axion_animation', animation);
+    localStorage.setItem('axion_timezone', timezone);
+  }, [theme, density, animation, timezone]);
 
   // Main Dashboard Data Loop
   useEffect(() => {
@@ -160,6 +167,7 @@ function App() {
                       data={trendData} 
                       timeRange={timeRange} 
                       onTimeRangeChange={setTimeRange} 
+                      timezone={timezone}
                     />
                     <Throughput data={throughput} />
                   </div>
@@ -184,7 +192,7 @@ function App() {
           />
         );
       case 'alarms':
-        return <AlarmsEvents devices={topAnomalous} />;
+        return <AlarmsEvents devices={topAnomalous} timezone={timezone} />;
       case 'trends':
         return <HistoricalTrends />;
       case 'settings':
@@ -194,6 +202,12 @@ function App() {
             onRefreshIntervalChange={setRefreshInterval}
             theme={theme}
             onThemeChange={setTheme}
+            density={density}
+            onDensityChange={setDensity}
+            animation={animation}
+            onAnimationChange={setAnimation}
+            timezone={timezone}
+            onTimezoneChange={setTimezone}
           />
         );
       default:
@@ -223,7 +237,7 @@ function App() {
         <Sidebar currentView={currentView} onViewChange={setCurrentView} />
         
         <div className="flex-1 lg:ml-64 ml-16 min-w-0 flex flex-col h-screen overflow-hidden">
-          <TopBar onlineAssets={summary.onlineAssets} lastUpdate={summary.lastUpdate} onLogout={handleLogout} />
+          <TopBar onlineAssets={summary.onlineAssets} lastUpdate={formatAppDate(summary.lastUpdateRaw, timezone)} onLogout={handleLogout} />
           
           {renderCurrentView()}
         </div>

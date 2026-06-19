@@ -1,13 +1,25 @@
-import { RefreshCw, Database, User, Shield, Bell, Palette } from 'lucide-react';
+import { RefreshCw, Database, User, Shield, Bell, Palette, Layout, Globe } from 'lucide-react';
 
 interface SystemSettingsProps {
   refreshInterval: number | null;
   onRefreshIntervalChange: (val: number | null) => void;
   theme?: string;
   onThemeChange?: (theme: string) => void;
+  density?: string;
+  onDensityChange?: (val: string) => void;
+  animation?: string;
+  onAnimationChange?: (val: string) => void;
+  timezone?: string;
+  onTimezoneChange?: (val: string) => void;
 }
 
-export function SystemSettings({ refreshInterval, onRefreshIntervalChange, theme, onThemeChange }: SystemSettingsProps) {
+export function SystemSettings({ 
+  refreshInterval, onRefreshIntervalChange, 
+  theme, onThemeChange,
+  density, onDensityChange,
+  timezone, onTimezoneChange
+}: SystemSettingsProps) {
+  
   const sections = [
     { id: 'db', title: 'Database Configuration', icon: Database, desc: 'Manage TimescaleDB connection pools and retention policies.' },
     { id: 'users', title: 'User Management', icon: User, desc: 'Role-based access control and API token generation.' },
@@ -32,7 +44,9 @@ export function SystemSettings({ refreshInterval, onRefreshIntervalChange, theme
 
       <div className="mb-8">
         <h3 className="text-lg font-bold text-white mb-4">Core Preferences</h3>
-        <div className="bg-[#171717] border border-[#262626] rounded-md p-6 max-w-4xl">
+        <div className="bg-[#171717] border border-[#262626] rounded-md p-6 max-w-4xl flex flex-col gap-8">
+          
+          {/* Auto-Refresh */}
           <div className="flex items-start gap-4">
             <div className="w-10 h-10 rounded bg-[#0a0a0a] border border-[#404040] flex items-center justify-center shrink-0">
               <RefreshCw className={`w-5 h-5 ${refreshInterval ? 'text-theme-base animate-spin-slow' : 'text-slate-500'}`} style={{ animationDuration: '3s' }} />
@@ -65,21 +79,60 @@ export function SystemSettings({ refreshInterval, onRefreshIntervalChange, theme
               </div>
             </div>
           </div>
+
+          <div className="h-[1px] w-full bg-[#262626]"></div>
+
+          {/* Timezone */}
+          {timezone && onTimezoneChange && (
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded bg-[#0a0a0a] border border-[#404040] flex items-center justify-center shrink-0">
+                <Globe className="w-5 h-5 text-theme-base" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-base font-bold text-white mb-1">Global Timezone Override</h4>
+                <p className="text-sm text-slate-400 mb-4">
+                  Synchronize timestamp displays across all telemetry trends and alarm events.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  {[
+                    { label: 'Local Time (Browser)', value: 'local' },
+                    { label: 'UTC / Zulu Time', value: 'utc' },
+                    { label: 'Facility Time (CT)', value: 'facility' },
+                  ].map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => onTimezoneChange(opt.value)}
+                      className={`px-4 py-2 rounded text-sm font-bold transition-colors border ${
+                        timezone === opt.value
+                          ? 'bg-theme-base/20 text-theme-light border-theme-base/50'
+                          : 'bg-[#0a0a0a] text-slate-400 border-[#404040] hover:text-white hover:border-slate-500'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
 
-      {theme && onThemeChange && (
-        <div className="mb-8">
-          <h3 className="text-lg font-bold text-white mb-4">Appearance</h3>
-          <div className="bg-[#171717] border border-[#262626] rounded-md p-6 max-w-4xl">
+      <div className="mb-8">
+        <h3 className="text-lg font-bold text-white mb-4">Appearance & Interface</h3>
+        <div className="bg-[#171717] border border-[#262626] rounded-md p-6 max-w-4xl flex flex-col gap-8">
+          
+          {/* UI Theme */}
+          {theme && onThemeChange && (
             <div className="flex items-start gap-4">
               <div className="w-10 h-10 rounded bg-[#0a0a0a] border border-[#404040] flex items-center justify-center shrink-0">
                 <Palette className="w-5 h-5 text-theme-base" />
               </div>
               <div className="flex-1">
-                <h4 className="text-base font-bold text-white mb-1">UI Theme</h4>
+                <h4 className="text-base font-bold text-white mb-1">Color Theme</h4>
                 <p className="text-sm text-slate-400 mb-6">
-                  Customize the global color palette, glowing accents, and data visualizations across the entire platform.
+                  Customize the global color palette, glowing accents, and data visualizations.
                 </p>
                 
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -105,9 +158,47 @@ export function SystemSettings({ refreshInterval, onRefreshIntervalChange, theme
                 </div>
               </div>
             </div>
-          </div>
+          )}
+
+          <div className="h-[1px] w-full bg-[#262626]"></div>
+
+          {/* Layout Density */}
+          {density && onDensityChange && (
+            <div className="flex items-start gap-4">
+              <div className="w-10 h-10 rounded bg-[#0a0a0a] border border-[#404040] flex items-center justify-center shrink-0">
+                <Layout className="w-5 h-5 text-theme-base" />
+              </div>
+              <div className="flex-1">
+                <h4 className="text-base font-bold text-white mb-1">Layout Density</h4>
+                <p className="text-sm text-slate-400 mb-4">
+                  Adjust interface padding and margins to optimize data visibility.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                  {[
+                    { label: 'Premium (Spacious)', value: 'premium' },
+                    { label: 'Compact (High-Density)', value: 'compact' },
+                  ].map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => onDensityChange(opt.value)}
+                      className={`px-4 py-2 rounded text-sm font-bold transition-colors border ${
+                        density === opt.value
+                          ? 'bg-theme-base/20 text-theme-light border-theme-base/50'
+                          : 'bg-[#0a0a0a] text-slate-400 border-[#404040] hover:text-white hover:border-slate-500'
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+
+
         </div>
-      )}
+      </div>
 
       <div className="mb-4">
         <h3 className="text-lg font-bold text-white mb-4">Integrations (Coming Soon)</h3>

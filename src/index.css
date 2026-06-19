@@ -289,3 +289,36 @@ input, select, textarea {
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+/* ── Global Preferences Overrides ─────────────────────────── */
+
+/* 1. Layout Density: Compact */
+[data-density="compact"] .p-6 { padding: 1rem !important; }
+[data-density="compact"] .px-6 { padding-left: 1rem !important; padding-right: 1rem !important; }
+[data-density="compact"] .py-6 { padding-top: 1rem !important; padding-bottom: 1rem !important; }
+[data-density="compact"] .p-4 { padding: 0.5rem !important; }
+[data-density="compact"] .gap-4 { gap: 0.5rem !important; }
+[data-density="compact"] .gap-6 { gap: 1rem !important; }
+[data-density="compact"] .mb-6 { margin-bottom: 1rem !important; }
+[data-density="compact"] .mb-8 { margin-bottom: 1.25rem !important; }
+[data-density="compact"] h2 { font-size: 1.25rem !important; }
+[data-density="compact"] h3 { font-size: 1rem !important; }
+[data-density="compact"] .text-2xl { font-size: 1.25rem !important; }
+
+/* 2. Animation Performance: Optimized */
+[data-animation="optimized"] * {
+  animation-play-state: paused !important;
+  transition-duration: 0ms !important;
+}
+[data-animation="optimized"] .noise-bg::before,
+[data-animation="optimized"] .animate-\[spin_120s_linear_infinite\],
+[data-animation="optimized"] .animate-\[spin_90s_linear_infinite_reverse\] {
+  display: none !important;
+}
+[data-animation="optimized"] .backdrop-blur-xl,
+[data-animation="optimized"] .backdrop-filter,
+[data-animation="optimized"] .glass-card {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background-color: rgba(10, 10, 10, 0.98) !important;
+}

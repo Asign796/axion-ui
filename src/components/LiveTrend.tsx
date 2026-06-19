@@ -1,19 +1,19 @@
 import { useState } from 'react';
 import { ResponsiveContainer, AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ReferenceLine } from 'recharts';
+import { formatAppDate } from '../utils/date';
 
 interface LiveTrendProps {
   data: any[];
   timeRange: number;
   onTimeRangeChange: (hours: number) => void;
+  timezone: string;
 }
 
-export function LiveTrend({ data, timeRange, onTimeRangeChange }: LiveTrendProps) {
+export function LiveTrend({ data, timeRange, onTimeRangeChange, timezone }: LiveTrendProps) {
   const [metric, setMetric] = useState<'temperature' | 'vibration' | 'current'>('temperature');
 
   const formatTime = (timeStr: any) => {
-    const str = typeof timeStr === 'string' && !timeStr.endsWith('Z') ? `${timeStr}Z` : timeStr;
-    const date = new Date(str);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return formatAppDate(timeStr, timezone, true);
   };
 
   const getMetricColor = () => {
