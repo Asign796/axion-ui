@@ -60,7 +60,7 @@ export function LiveTrend({ data, timeRange, onTimeRangeChange }: LiveTrendProps
                 key={tr.label}
                 onClick={() => onTimeRangeChange(tr.value)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
-                  timeRange === tr.value ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
+                  timeRange === tr.value ? 'bg-fuchsia-600 text-white shadow-sm' : 'text-slate-400 hover:text-slate-200'
                 }`}
               >
                 {tr.label}

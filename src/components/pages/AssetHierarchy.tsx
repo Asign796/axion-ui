@@ -44,7 +44,7 @@ export function AssetHierarchy({ devices, onSelectDevice }: AssetHierarchyProps)
       
       <div className="flex-1 glass-card rounded-md p-6 overflow-auto custom-scrollbar animate-fade-up">
         <div className="flex items-center gap-2 text-slate-300 font-medium mb-4 p-2 bg-[#0a0a0a]/80 backdrop-blur-sm rounded border border-[#404040] w-fit pr-6">
-          <Server className="w-5 h-5 text-blue-500" />
+          <Server className="w-5 h-5 text-theme-base" />
           <span>Enterprise: Axion Global</span>
         </div>
         

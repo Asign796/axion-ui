@@ -32,13 +32,13 @@ export function AlarmsEvents({ devices }: AlarmsEventsProps) {
   const getLevelColor = (level: string) => {
     if (level === 'CRITICAL') return 'text-red-500 bg-red-500/10 border-red-500/20';
     if (level === 'WARNING') return 'text-amber-500 bg-amber-500/10 border-amber-500/20';
-    return 'text-blue-500 bg-blue-500/10 border-blue-500/20';
+    return 'text-theme-base bg-theme-base/10 border-theme-base/20';
   };
 
   const getLevelIcon = (level: string) => {
     if (level === 'CRITICAL') return <AlertTriangle className="w-4 h-4 text-red-500" />;
     if (level === 'WARNING') return <Bell className="w-4 h-4 text-amber-500" />;
-    return <Info className="w-4 h-4 text-blue-500" />;
+    return <Info className="w-4 h-4 text-theme-base" />;
   };
 
   return (

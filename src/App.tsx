@@ -96,6 +96,15 @@ function App() {
     }
   };
 
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('axion_theme') || 'blue';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('axion_theme', theme);
+  }, [theme]);
+
   // Main Dashboard Data Loop
   useEffect(() => {
     fetchDashboardData();
@@ -127,7 +136,6 @@ function App() {
           <FleetSummary 
             regionSummary={regionSummary} 
             onSelectRegion={() => {
-              // For now just route to dashboard, in future could filter devices
               setCurrentView('dashboard');
             }} 
           />
@@ -137,7 +145,6 @@ function App() {
           <div className="flex-1 overflow-y-auto px-4 md:px-6 pb-6 custom-scrollbar">
             <div className="max-w-[1600px] mx-auto">
               <div className="grid grid-cols-1 xl:grid-cols-[300px_1fr_300px] gap-4">
-                {/* Left Sidebar */}
                 <div className="flex flex-col gap-4">
                   <AssetList 
                     devices={devices} 
@@ -146,11 +153,8 @@ function App() {
                   />
                   <Regions regionSummary={regionSummary} devices={devices} />
                 </div>
-
-                {/* Main Content */}
                 <div className="flex flex-col gap-4">
                   <KPIStrip device={latestData} />
-                  
                   <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-4">
                     <LiveTrend 
                       data={trendData} 
@@ -160,8 +164,6 @@ function App() {
                     <Throughput data={throughput} />
                   </div>
                 </div>
-
-                {/* Right Sidebar */}
                 <div className="flex flex-col gap-4">
                   <div className="h-[600px]">
                     <AlertsPanel devices={topAnomalous} onSelectDevice={setSelectedDeviceId} />
@@ -189,7 +191,9 @@ function App() {
         return (
           <SystemSettings 
             refreshInterval={refreshInterval} 
-            onRefreshIntervalChange={setRefreshInterval} 
+            onRefreshIntervalChange={setRefreshInterval}
+            theme={theme}
+            onThemeChange={setTheme}
           />
         );
       default:
@@ -205,12 +209,12 @@ function App() {
       </div>
 
       {/* Ambient Premium Glows */}
-      <div className="fixed top-[-20%] left-[-10%] w-[60%] h-[60%] bg-blue-900/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
-      <div className="fixed bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-purple-900/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
+      <div className="fixed top-[-20%] left-[-10%] w-[60%] h-[60%] bg-theme-deep/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
+      <div className="fixed bottom-[-20%] right-[-10%] w-[60%] h-[60%] bg-theme-deep/20 blur-[150px] rounded-full pointer-events-none z-0"></div>
 
       {/* Abstract Data Rings */}
-      <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] border border-blue-500/10 rounded-full animate-[spin_120s_linear_infinite] pointer-events-none z-0 opacity-40"></div>
-      <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border-2 border-dashed border-purple-500/10 rounded-full animate-[spin_90s_linear_infinite_reverse] pointer-events-none z-0 opacity-40"></div>
+      <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[1000px] h-[1000px] border border-theme-base/10 rounded-full animate-[spin_120s_linear_infinite] pointer-events-none z-0 opacity-40"></div>
+      <div className="fixed top-[50%] left-[50%] -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] border-2 border-dashed border-theme-base/10 rounded-full animate-[spin_90s_linear_infinite_reverse] pointer-events-none z-0 opacity-40"></div>
       
       {/* Subtle Dot Grid Background */}
       <div className="fixed inset-0 opacity-[0.03] z-0 pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at center, white 1px, transparent 1px)', backgroundSize: '24px 24px' }}></div>

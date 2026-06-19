@@ -13,7 +13,7 @@ export function TopBar({ onlineAssets, lastUpdate, onLogout }: TopBarProps) {
   return (
     <header className="bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-[#262626] px-6 py-3 mb-6 flex flex-col md:flex-row items-center justify-between gap-4 sticky top-0 z-40">
       {/* Top Gradient Accent Line */}
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-blue-600 via-purple-600 to-blue-500 opacity-80"></div>
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-theme-grad-start via-blue-600 to-theme-base opacity-80"></div>
 
       <div className="flex items-center gap-4">
         <div>
@@ -60,7 +60,7 @@ export function TopBar({ onlineAssets, lastUpdate, onLogout }: TopBarProps) {
           href="https://chat.axionsystems.de"
           target="_blank"
           rel="noopener noreferrer"
-          className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white px-6 py-2.5 rounded-full font-bold shadow-[0_0_20px_rgba(59,130,246,0.6)] transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(59,130,246,0.9)] border border-blue-400/50"
+          className="flex items-center gap-2 bg-gradient-to-r from-theme-grad-start to-theme-grad-end hover:from-theme-grad-start-hover hover:to-theme-grad-end-hover text-white px-6 py-2.5 rounded-full font-bold shadow-[0_0_20px_rgba(var(--theme-rgb-base),0.6)] transition-all hover:scale-105 hover:shadow-[0_0_30px_rgba(var(--theme-rgb-base),0.9)] border border-theme-light/50"
         >
           <Sparkles className="w-5 h-5 animate-pulse text-yellow-300" />
           <span className="tracking-wide">Ask AI Assistant</span>

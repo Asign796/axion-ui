@@ -31,11 +31,11 @@ export function Sidebar({ currentView, onViewChange }: SidebarProps) {
               onClick={() => onViewChange(item.id)}
               className={`w-full flex items-center gap-4 px-4 lg:px-6 py-3 transition-colors ${
                 isActive 
-                  ? 'bg-[#171717] border-r-2 border-blue-500' 
+                  ? 'bg-[#171717] border-r-2 border-theme-base' 
                   : 'hover:bg-[#171717]/50 border-r-2 border-transparent text-slate-500 hover:text-slate-300'
               }`}
             >
-              <item.icon className={`w-5 h-5 ${isActive ? 'text-blue-500' : ''}`} />
+              <item.icon className={`w-5 h-5 ${isActive ? 'text-theme-base' : ''}`} />
               <span className={`hidden lg:block font-medium text-sm ${isActive ? 'text-white' : ''}`}>
                 {item.label}
               </span>

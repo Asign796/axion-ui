@@ -11,12 +11,12 @@ export function HistoricalTrends() {
         <div className="flex gap-2">
           <input 
             type="date" 
-            className="bg-[#0a0a0a] border border-[#404040] text-slate-300 px-3 py-1.5 rounded text-sm focus:outline-none focus:border-blue-500" 
+            className="bg-[#0a0a0a] border border-[#404040] text-slate-300 px-3 py-1.5 rounded text-sm focus:outline-none focus:border-theme-base" 
           />
           <span className="text-slate-500 flex items-center px-2">to</span>
           <input 
             type="date" 
-            className="bg-[#0a0a0a] border border-[#404040] text-slate-300 px-3 py-1.5 rounded text-sm focus:outline-none focus:border-blue-500" 
+            className="bg-[#0a0a0a] border border-[#404040] text-slate-300 px-3 py-1.5 rounded text-sm focus:outline-none focus:border-theme-base" 
           />
         </div>
       </div>
@@ -30,14 +30,14 @@ export function HistoricalTrends() {
               <input 
                 type="text" 
                 placeholder="Search tags..." 
-                className="w-full bg-[#0a0a0a] border border-[#404040] rounded pl-8 pr-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-blue-500"
+                className="w-full bg-[#0a0a0a] border border-[#404040] rounded pl-8 pr-3 py-1.5 text-sm text-slate-200 focus:outline-none focus:border-theme-base"
               />
             </div>
           </div>
           <div className="flex-1 p-3 overflow-y-auto space-y-2">
             <div className="text-xs font-bold text-slate-500 uppercase">Selected Tags</div>
             <div className="flex items-center gap-2 p-1.5 bg-[#262626] rounded text-sm text-white">
-              <div className="w-3 h-3 bg-blue-500 rounded-sm"></div>
+              <div className="w-3 h-3 bg-theme-base rounded-sm"></div>
               COMPRESSOR_E01.Temp
             </div>
             <div className="flex items-center gap-2 p-1.5 hover:bg-[#262626] rounded text-sm text-slate-400 cursor-pointer">

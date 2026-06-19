@@ -46,7 +46,7 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
         </div>
         <input
           type="text"
-          className="w-full bg-slate-800/50 border border-slate-700/50 rounded-sm pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/50 transition-all"
+          className="w-full bg-slate-800/50 border border-slate-700/50 rounded-sm pl-10 pr-4 py-2 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-theme-base/50 focus:ring-1 focus:ring-theme-base/50 transition-all"
           placeholder="Search devices or regions..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
@@ -61,7 +61,7 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
             onClick={() => setFilterType(type)}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
               filterType === type 
-                ? 'bg-blue-600 text-white shadow-sm glow-blue' 
+                ? 'bg-fuchsia-600 text-white shadow-sm glow-primary' 
                 : 'bg-slate-800/30 text-slate-400 hover:text-slate-200 hover:bg-slate-800/50'
             }`}
           >
@@ -94,7 +94,7 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
               onClick={() => onSelectDevice(device.device_id)}
               className={`w-full text-left p-3 rounded-sm border transition-all duration-300 flex items-start gap-3 ${
                 isSelected 
-                  ? 'bg-blue-900/40 border-blue-500/50 shadow-[0_0_15px_rgba(59,130,246,0.15)]' 
+                  ? 'bg-theme-deep/40 border-theme-base/50 shadow-[0_0_15px_rgba(var(--theme-rgb-base),0.15)]' 
                   : 'bg-slate-800/30 border-slate-700/50 hover:bg-slate-800/50 hover:border-slate-600/50'
               }`}
             >
@@ -113,7 +113,7 @@ export function AssetList({ devices, selectedDeviceId, onSelectDevice }: AssetLi
                   </h4>
                 </div>
                 <p className="text-xs text-slate-400 truncate">{device.refinery_region}</p>
-                <p className={`text-[10px] mt-1.5 font-medium ${isOnline ? 'text-blue-400' : 'text-slate-500'}`}>
+                <p className={`text-[10px] mt-1.5 font-medium ${isOnline ? 'text-theme-light' : 'text-slate-500'}`}>
                   {lastSeenText}
                 </p>
               </div>

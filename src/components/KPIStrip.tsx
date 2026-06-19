@@ -46,7 +46,7 @@ export function KPIStrip({ device }: KPIStripProps) {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
           <span className="text-slate-400 font-medium tracking-wide">Selected Device:</span>
-          <span className="px-4 py-1.5 bg-blue-500/10 border border-blue-500/20 rounded-sm text-white font-bold tracking-wider shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+          <span className="px-4 py-1.5 bg-theme-base/10 border border-theme-base/20 rounded-sm text-white font-bold tracking-wider shadow-[0_0_15px_rgba(var(--theme-rgb-base),0.1)]">
             {device.device_id}
           </span>
         </div>

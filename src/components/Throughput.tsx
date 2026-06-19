@@ -31,7 +31,7 @@ export function Throughput({ data }: ThroughputProps) {
               dataKey="count" 
               fill="#3B82F6" 
               radius={[4, 4, 0, 0]} 
-              className="fill-blue-500 hover:fill-blue-400 transition-all duration-300"
+              className="fill-theme-base hover:fill-blue-400 transition-all duration-300"
             />
           </BarChart>
         </ResponsiveContainer>

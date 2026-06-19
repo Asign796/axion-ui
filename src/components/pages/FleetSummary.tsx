@@ -22,7 +22,7 @@ export function FleetSummary({ regionSummary, onSelectRegion }: FleetSummaryProp
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
         <div className="glass-card rounded-md p-6 animate-fade-up">
           <div className="flex items-center gap-3 mb-2">
-            <Building className="w-5 h-5 text-blue-500" />
+            <Building className="w-5 h-5 text-theme-base" />
             <h3 className="text-sm font-bold text-slate-400 uppercase tracking-wider">Total Assets</h3>
           </div>
           <div className="text-4xl font-black text-white">{totalAssets}</div>
@@ -58,7 +58,7 @@ export function FleetSummary({ regionSummary, onSelectRegion }: FleetSummaryProp
             <div className="p-5 border-b border-[#262626] flex justify-between items-center">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded bg-[#0a0a0a] border border-[#404040] flex items-center justify-center">
-                  <Building className="w-5 h-5 text-blue-500" />
+                  <Building className="w-5 h-5 text-theme-base" />
                 </div>
                 <div>
                   <h4 className="text-xl font-bold text-white tracking-tight">{region.region}</h4>
@@ -67,7 +67,7 @@ export function FleetSummary({ regionSummary, onSelectRegion }: FleetSummaryProp
               </div>
               <button 
                 onClick={() => onSelectRegion(region.region)}
-                className="text-sm font-bold text-blue-500 hover:text-blue-400 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="text-sm font-bold text-theme-base hover:text-theme-light flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
               >
                 View Diagnostics <ArrowRight className="w-4 h-4" />
               </button>

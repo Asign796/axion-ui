@@ -1,6 +1,15 @@
 @import "tailwindcss";
 
 @theme {
+  --color-theme-base: var(--theme-base);
+  --color-theme-light: var(--theme-light);
+  --color-theme-dark: var(--theme-dark);
+  --color-theme-deep: var(--theme-deep);
+  --color-theme-grad-start: var(--theme-grad-start);
+  --color-theme-grad-end: var(--theme-grad-end);
+  --color-theme-grad-start-hover: var(--theme-grad-start-hover);
+  --color-theme-grad-end-hover: var(--theme-grad-end-hover);
+
   --color-dark-950: #000000;
   --color-dark-900: #0a0a0a;
   --color-dark-800: #171717;
@@ -13,11 +22,6 @@
   --color-dark-100: #e5e5e5;
   --color-dark-50: #fafafa;
 
-  --color-primary: #3B82F6;
-  --color-primary-dark: #2563EB;
-  --color-primary-light: #60A5FA;
-  --color-primary-glow: rgba(59, 130, 246, 0.15);
-
   --color-success: #22C55E;
   --color-warning: #F59E0B;
   --color-critical: #EF4444;
@@ -27,6 +31,67 @@
   --color-glass-hover: rgba(38, 38, 38, 1);
 
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+:root {
+  /* Default: Blue Theme */
+  --theme-base: #3b82f6;
+  --theme-light: #60a5fa;
+  --theme-dark: #2563eb;
+  --theme-deep: #1e3a8a;
+  --theme-grad-start: #2563eb;
+  --theme-grad-end: #9333ea;
+  --theme-grad-start-hover: #3b82f6;
+  --theme-grad-end-hover: #a855f7;
+  --theme-rgb-base: 59, 130, 246;
+}
+
+[data-theme="purple"] {
+  --theme-base: #a855f7;
+  --theme-light: #c084fc;
+  --theme-dark: #9333ea;
+  --theme-deep: #581c87;
+  --theme-grad-start: #c026d3;
+  --theme-grad-end: #9333ea;
+  --theme-grad-start-hover: #d946ef;
+  --theme-grad-end-hover: #a855f7;
+  --theme-rgb-base: 168, 85, 247;
+}
+
+[data-theme="emerald"] {
+  --theme-base: #10b981;
+  --theme-light: #34d399;
+  --theme-dark: #059669;
+  --theme-deep: #064e3b;
+  --theme-grad-start: #059669;
+  --theme-grad-end: #0d9488;
+  --theme-grad-start-hover: #10b981;
+  --theme-grad-end-hover: #14b8a6;
+  --theme-rgb-base: 16, 185, 129;
+}
+
+[data-theme="amber"] {
+  --theme-base: #f59e0b;
+  --theme-light: #fbbf24;
+  --theme-dark: #d97706;
+  --theme-deep: #78350f;
+  --theme-grad-start: #d97706;
+  --theme-grad-end: #ea580c;
+  --theme-grad-start-hover: #f59e0b;
+  --theme-grad-end-hover: #f97316;
+  --theme-rgb-base: 245, 158, 11;
+}
+
+[data-theme="rose"] {
+  --theme-base: #f43f5e;
+  --theme-light: #fb7185;
+  --theme-dark: #e11d48;
+  --theme-deep: #881337;
+  --theme-grad-start: #e11d48;
+  --theme-grad-end: #db2777;
+  --theme-grad-start-hover: #f43f5e;
+  --theme-grad-end-hover: #ec4899;
+  --theme-rgb-base: 244, 63, 94;
 }
 
 /* ── Base ─────────────────────────────────── */
@@ -43,7 +108,7 @@ body {
 }
 
 ::selection {
-  background-color: rgba(59, 130, 246, 0.3);
+  background-color: rgba(var(--theme-rgb-base), 0.3);
   color: #fff;
 }
 
@@ -69,8 +134,8 @@ body {
 }
 
 @keyframes pulseGlow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
-  50% { box-shadow: 0 0 0 5px rgba(59, 130, 246, 0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(var(--theme-rgb-base), 0.4); }
+  50% { box-shadow: 0 0 0 5px rgba(var(--theme-rgb-base), 0); }
 }
 
 @keyframes barPulse {
@@ -146,16 +211,16 @@ body {
   background-clip: text;
 }
 
-.gradient-text-blue {
-  background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 50%, #2563EB 100%);
+.gradient-text-primary {
+  background: linear-gradient(135deg, var(--theme-light) 0%, var(--theme-grad-start) 50%, var(--theme-grad-end) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 /* ── Glow effects ─────────────────────────── */
-.glow-blue {
-  box-shadow: 0 0 20px rgba(59, 130, 246, 0.15), 0 0 60px rgba(59, 130, 246, 0.05);
+.glow-primary {
+  box-shadow: 0 0 20px rgba(var(--theme-rgb-base), 0.15), 0 0 60px rgba(var(--theme-rgb-base), 0.05);
 }
 
 .glow-border {
@@ -167,7 +232,7 @@ body {
   position: absolute;
   inset: -1px;
   border-radius: inherit;
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), transparent, rgba(59, 130, 246, 0.1));
+  background: linear-gradient(135deg, rgba(var(--theme-rgb-base), 0.2), transparent, rgba(var(--theme-rgb-base), 0.1));
   z-index: -1;
   opacity: 0;
   transition: opacity 0.3s;

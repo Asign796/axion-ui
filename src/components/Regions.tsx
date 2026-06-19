@@ -10,7 +10,7 @@ export function Regions({ regionSummary }: RegionsProps) {
      return (
         <div className="glass-card p-4 rounded-md animate-fade-up delay-500">
           <div className="flex items-center gap-2 mb-4 px-2">
-            <MapPin className="text-blue-500 w-5 h-5" />
+            <MapPin className="text-theme-base w-5 h-5" />
             <h3 className="text-lg font-bold text-white tracking-tight">Regions</h3>
           </div>
           <div className="text-sm text-slate-500 text-center py-4">Waiting for regional data...</div>
@@ -21,7 +21,7 @@ export function Regions({ regionSummary }: RegionsProps) {
   return (
     <div className="glass-card p-4 rounded-md animate-fade-up delay-500">
       <div className="flex items-center gap-2 mb-4 px-2">
-        <MapPin className="text-blue-500 w-5 h-5" />
+        <MapPin className="text-theme-base w-5 h-5" />
         <h3 className="text-lg font-bold text-white tracking-tight">Regions</h3>
       </div>
       
