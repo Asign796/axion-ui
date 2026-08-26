@@ -8,7 +8,7 @@ on:
 env:
     REGISTRY: ghcr.io
   # Evaluates to 'asign796/axion-ui'
-IMAGE_NAME: asign796/axion-ui
+    IMAGE_NAME: asign796/axion-ui
 
 jobs:
   build-and-push:
