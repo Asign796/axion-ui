@@ -6,8 +6,9 @@ on:
   workflow_dispatch:
 
 env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+    REGISTRY: ghcr.io
+  # Evaluates to 'asign796/axion-ui'
+IMAGE_NAME: asign796/axion-ui
 
 jobs:
   build-and-push:
